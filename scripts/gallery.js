@@ -1,16 +1,6 @@
 ﻿function Gallery() {
-    var slideshowTimer;
-    var hasMovedMouseOnImageViewerPage = false;
-
-    function getImageUrl(item) {
-        if (item.s3Path) {
-            var url = '/api/Gallery/image/tgonzalez-image-archive/national-gallery-of-art-alt?s3Name=' +
-                item.s3Path.split('/').pop();
-            return url;
-        } else {
-            return 'https://www.the-athenaeum.org/art/display_image.php?id=' + item.imageId;
-        }
-    }
+    let slideshowTimer;
+    let hasMovedMouseOnImageViewerPage = false;
 
     function assertSuccess(response, json) {
         if (!response || response.status < 200 || response.status > 299) {
@@ -27,6 +17,8 @@
     }
 
     function showCurrentImage() {
+
+        /*
         var slideshowItems = JSON.parse(localStorage.getItem('slideshowData'));
         var slideshowIndex = parseInt(localStorage.getItem("slideshowIndex"));
         if (isNaN(slideshowIndex)) {
@@ -35,7 +27,29 @@
         var currentImage = slideshowItems[slideshowIndex];
         $('#slideshow-index').html(slideshowIndex + 1);
         $('#slideshow-count').html(slideshowItems.length);
-        $('#slideshow-image').prop('src', getImageUrl(currentImage));
+        */
+
+
+        let url2 = "https://api.gonzalez-art-foundation.org/unauthenticated/image?path=the-athenaeum/page-id-10002.jpg";
+        fetch(url2, {
+            mode: 'cors',
+            credentials: 'include',
+        }).then(function (response) {
+            response
+                .json()
+                .then(function (json) {
+                    if (assertSuccess(response, json)) {
+                        console.log(json.base64Image);
+                        $('#slideshow-image').prop('src', json.base64Image);
+                    }
+                })
+                .catch(function (error) {
+                    console.log('Failed to get data:');
+                    console.log(error);
+                });
+        });
+
+        return;
 
         var link;
         var linkText;
