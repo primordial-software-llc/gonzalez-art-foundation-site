@@ -26,7 +26,7 @@ function loadSearchResults(results) {
     $('#slideshow-start').click(function () {
         localStorage.setItem("slideshowData", JSON.stringify(results));
         localStorage.setItem("slideshowIndex", 0);
-        window.location = "/Home/ImageViewer";
+        window.location = "/image-viewer.html";
     });
 }
 
@@ -76,30 +76,24 @@ var getUrlParameter = function getUrlParameter(sParam) {
 };
 
 $(document).ready(function () {
-
-    var tags = getUrlParameter('tags');
+    let tags = getUrlParameter('tags');
     if (tags) {
         $('#tagSearchText').val(tags);
     }
-
     $('#likeSearch').click(function () {
-        var url = `/api/Gallery/searchLikeArtist?artist=${encodeURIComponent($('#likeSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url = `/api/Gallery/searchLikeArtist?artist=${encodeURIComponent($('#likeSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
-
     $('#exactSearch').click(function () {
-        var url = `/api/Gallery/searchExactArtist?artist=${encodeURIComponent($('#exactSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url = `/api/Gallery/searchExactArtist?artist=${encodeURIComponent($('#exactSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
-
     $('#idSearch').click(function () {
-        var url = `/api/Gallery/scan?lastPageId=${encodeURIComponent($('#idSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url = `https://api.gonzalez-art-foundation.org/unauthenticated/scan?lastPageId=${encodeURIComponent($('#idSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
-
     $('#tagSearch').click(function () {
-        var url = `/api/Gallery/searchLabel?label=${encodeURIComponent($('#tagSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url = `/api/Gallery/searchLabel?label=${encodeURIComponent($('#tagSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
-
 });

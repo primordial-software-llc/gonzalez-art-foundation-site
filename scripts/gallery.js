@@ -17,8 +17,6 @@
     }
 
     function showCurrentImage() {
-
-        /*
         var slideshowItems = JSON.parse(localStorage.getItem('slideshowData'));
         var slideshowIndex = parseInt(localStorage.getItem("slideshowIndex"));
         if (isNaN(slideshowIndex)) {
@@ -27,10 +25,8 @@
         var currentImage = slideshowItems[slideshowIndex];
         $('#slideshow-index').html(slideshowIndex + 1);
         $('#slideshow-count').html(slideshowItems.length);
-        */
 
-
-        let url2 = "https://api.gonzalez-art-foundation.org/unauthenticated/image?path=the-athenaeum/page-id-10002.jpg";
+        let url2 = `https://api.gonzalez-art-foundation.org/unauthenticated/image?path=${currentImage.s3Path}`;
         fetch(url2, {
             mode: 'cors',
             credentials: 'include',
@@ -49,10 +45,8 @@
                 });
         });
 
-        return;
-
-        var link;
-        var linkText;
+        let link;
+        let linkText;
 
         if (currentImage.source === 'http://images.nga.gov') {
             linkText = 'Courtesy National Gallery of Art, Washington';
@@ -61,10 +55,12 @@
             linkText = "Courtesy The Athenaeum";
             link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
         }
-        
+
         $('#slideshow-image-info').html(currentImage.name + ' (' + currentImage.date + ') by ' + currentImage.originalArtist +
             ' - <a target="_blank" href="' + link + '">' + linkText + '</a>');
 
+
+        return;
         var url = `/api/Gallery/${currentImage.pageId}/label`;
         fetch(url, { credentials: "same-origin" }).then(function (response) {
             response
