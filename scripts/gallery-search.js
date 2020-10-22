@@ -12,7 +12,7 @@ function getImageUrl(item) {
 function loadSearchResults(results) {
     var html = '';
     html += '<div id="search-results-summary">Works of art found: ' + results.length + '</div>';
-    html += '<div id="slideshow-start"><img src="/Images/Glyphicons/glyphicons-9-film.png"> Start Slideshow </div>';
+    html += '<div id="slideshow-start"><img src="/images/Glyphicons/glyphicons-9-film.png"> Start Slideshow </div>';
     for (var ct = 0; ct < results.length; ct += 1) {
         var result = results[ct];
         html += '<div><a target="_blank" href="' + getImageUrl(result) + '" title="' + result.source + ' - ' + result.pageId + '"' + '>' +
