@@ -20,6 +20,8 @@
         var slideshowItems = JSON.parse(localStorage.getItem('slideshowData'));
         var slideshowIndex = parseInt(localStorage.getItem("slideshowIndex"));
         if (isNaN(slideshowIndex)) {
+            alert('No images selected. Use the search on the home page to queue images for viewing.');
+            location.href = 'https://www.gonzalez-art-foundation.org';
             return;
         }
         var currentImage = slideshowItems[slideshowIndex];

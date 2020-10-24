@@ -41,6 +41,7 @@ function assertSuccess(response, json) {
 }
 
 function loadSearchResultsFromUrl(url) {
+    $('#search-results').empty();
     fetch(url, { credentials: "same-origin" }).then(function (response) {
         if (response.status === 403) {
             alert('Credentials are invalid. Logout and login with valid credentials');
@@ -77,23 +78,26 @@ var getUrlParameter = function getUrlParameter(sParam) {
 
 $(document).ready(function () {
     let tags = getUrlParameter('tags');
+    let root = 'https://api.gonzalez-art-foundation.org/';
     if (tags) {
         $('#tagSearchText').val(tags);
     }
     $('#likeSearch').click(function () {
-        let url = `/api/Gallery/searchLikeArtist?artist=${encodeURIComponent($('#likeSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url = `${root}unauthenticated/search-like-artist?artist=${encodeURIComponent($('#likeSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
     $('#exactSearch').click(function () {
-        let url = `/api/Gallery/searchExactArtist?artist=${encodeURIComponent($('#exactSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url = `${root}unauthenticated/search-exact-artist?artist=${encodeURIComponent($('#exactSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
     $('#idSearch').click(function () {
-        let url = `https://api.gonzalez-art-foundation.org/unauthenticated/scan?lastPageId=${encodeURIComponent($('#idSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url = `${root}unauthenticated/scan?lastPageId=${encodeURIComponent($('#idSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
+    /*
     $('#tagSearch').click(function () {
         let url = `/api/Gallery/searchLabel?label=${encodeURIComponent($('#tagSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
+     */
 });
