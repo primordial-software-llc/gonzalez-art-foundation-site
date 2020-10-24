@@ -59,7 +59,7 @@
         }
 
         $('#slideshow-image-info').html(currentImage.name + ' (' + currentImage.date + ') by ' + currentImage.originalArtist +
-            ' - <a target="_blank" href="' + link + '">' + linkText + '</a>');
+            ' - <a target="_blank" href="' + link + '">' + linkText + '</a>' + ' - Image id ' + currentImage.pageId);
 
 
         return;
