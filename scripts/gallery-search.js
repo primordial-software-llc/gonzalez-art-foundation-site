@@ -42,19 +42,18 @@ function assertSuccess(response, json) {
 
 function loadSearchResultsFromUrl(url) {
     $('#search-results').empty();
+    $('.loader-group').removeClass('hide');
     fetch(url, { credentials: "same-origin" }).then(function (response) {
-        if (response.status === 403) {
-            alert('Credentials are invalid. Logout and login with valid credentials');
-            return;
-        }
         response
             .json()
             .then(function (json) {
+                $('.loader-group').addClass('hide');
                 if (assertSuccess(response, json)) {
                     loadSearchResults(json);   
                 }
             })
             .catch(function (error) {
+                $('.loader-group').addClass('hide');
                 console.log('Failed to get data:');
                 console.log(error);
             });
