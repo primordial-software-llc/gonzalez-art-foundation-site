@@ -1,6 +1,20 @@
 ﻿function Gallery() {
     let slideshowTimer;
     let hasMovedMouseOnImageViewerPage = false;
+    const ApiBase = 'https://api.gonzalez-art-foundation.org/';
+
+    function getUrlParameter(sParam) {
+        let sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    }
 
     function assertSuccess(response, json) {
         if (!response || response.status < 200 || response.status > 299) {
@@ -17,27 +31,27 @@
     }
 
     function showCurrentImage() {
-        var slideshowItems = JSON.parse(localStorage.getItem('slideshowData'));
-        var slideshowIndex = parseInt(localStorage.getItem("slideshowIndex"));
+        let slideshowItems = JSON.parse(localStorage.getItem('slideshowData'));
+        let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex"));
         if (isNaN(slideshowIndex)) {
             alert('No images selected. Use the search on the home page to queue images for viewing.');
             location.href = 'https://www.gonzalez-art-foundation.org';
             return;
         }
-        var currentImage = slideshowItems[slideshowIndex];
+        let currentImage = slideshowItems[slideshowIndex];
         $('#slideshow-index').html(slideshowIndex + 1);
         $('#slideshow-count').html(slideshowItems.length);
+        showImage(currentImage);
+    }
 
-        let url2 = `https://api.gonzalez-art-foundation.org/unauthenticated/image?path=${currentImage.s3Path}`;
-        fetch(url2, {
-            mode: 'cors',
-            credentials: 'include',
-        }).then(function (response) {
+    function showImage(currentImage) {
+        fetch(
+            `${ApiBase}unauthenticated/image?path=${currentImage.s3Path}`,
+            { mode: 'cors' }).then(function (response) {
             response
                 .json()
                 .then(function (json) {
                     if (assertSuccess(response, json)) {
-                        console.log(json.base64Image);
                         $('#slideshow-image').prop('src', json.base64Image);
                     }
                 })
@@ -81,13 +95,13 @@
     }
 
     function previouseImage() {
-        var slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
+        let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
         localStorage.setItem("slideshowIndex", slideshowIndex - 1);
         showCurrentImage();
     }
 
     function nextImage() {
-        var slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
+        let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
         localStorage.setItem("slideshowIndex", slideshowIndex + 1);
         showCurrentImage();
     }
@@ -100,18 +114,18 @@
 
     function showPlayer() {
         hasMovedMouseOnImageViewerPage = true;
-        $("#slideshow-player").slideDown("slow", function () {
-            $("#slideshow-player").show();
-            $('#slideshow-image-container').height('92%');
+        $(".slideshow-player").slideDown("slow", function () {
+            $(".slideshow-player").show();
+            $('#slideshow-image-container').removeClass('hide-controls');
         });
         $('body').css('cursor', '');
     }
 
     function hidePlayer() {
         $('body').css('cursor', 'none');
-        $("#slideshow-player").slideUp("slow", function () {
-            $("#slideshow-player").hide();
-            $('#slideshow-image-container').height('100%');
+        $(".slideshow-player").slideUp("slow", function () {
+            $(".slideshow-player").hide();
+            $('#slideshow-image-container').addClass('hide-controls');
         });
     }
 
@@ -178,43 +192,57 @@
 
     this.init = function() {
         $(document).ready(function () {
-            showCurrentImage();
+            let source = getUrlParameter('source');
+            let pageId = getUrlParameter('pageId');
+            if (source && pageId) {
+                $('#slideshow-controls').addClass('hide');
+                $('#slideshow-image-container').addClass('single-image-mode');
+                fetch(
+                    `${ApiBase}unauthenticated/cache-everything/image-classification?source=${encodeURIComponent(source)}&pageId=${encodeURIComponent(pageId)}`,
+                    { mode: 'cors' }).then(function (response) {
+                    response
+                        .json()
+                        .then(function (json) {
+                            if (assertSuccess(response, json)) {
+                                showImage(json);
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log('Failed to get data:');
+                            console.log(error);
+                        });
+                });
+            } else {
+                showCurrentImage();
+            }
 
             $('#slideshow-return-home').click(function () {
-                console.log('clicked');
                 window.location = "/";
             });
-
             $('#slideshow-fullscreen').click(function () {
                 showFullscreen();
             });
-
             $(this).mousemove(function () {
                 if (!isFullScreen()) {
                     showPlayer();
                 }
             });
-
             $(this).keypress(function () {
                 if (!isFullScreen()) {
                     showPlayer();
                 }
             });
-
             setInterval(function () {
                 tryHidePlayer();
             }, 15000);
-
             $('#slideshow-previous').click(function () {
                 previouseImage();
                 pauseSlideshow();
             });
-
             $('#slideshow-next').click(function () {
                 nextImage();
                 pauseSlideshow();
             });
-
             var defaultInterval = 6;
             $('#slideshow-interval').val(defaultInterval);
             $('#slideshow-pause').hide();
@@ -222,19 +250,15 @@
                 function slideshowTimerAction() {
                     nextImage();
                 }
-
                 var intervalInMs = parseFloat($('#slideshow-interval').val()) * 1000;
                 slideshowTimer = setInterval(slideshowTimerAction, intervalInMs);
                 $('#slideshow-pause').show();
                 $('#slideshow-play').hide();
             });
-
             $('#slideshow-pause').click(function () {
                 pauseSlideshow();
             });
-
             //enableNestIntegration();
-
             $('#home-away-status').click(function() {
                 if ($('#home-away-status.home-away-enabled').length > 0) {
                     $('#home-away-status').removeClass('away');

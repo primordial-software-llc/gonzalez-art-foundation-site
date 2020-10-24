@@ -13,18 +13,22 @@
 <div id="slideshow-image-container">
     <img id="slideshow-image" />
 </div>
-<div id="slideshow-player">
+<div class="slideshow-player">
     <div id="slideshow-image-info"></div>
-    <img id="slideshow-previous" alt="Previous" title="Previous" src="images/Glyphicons/glyphicons-173-rewind.png">
-    <img id="slideshow-pause" alt="Pause" title="Pause" src="images/Glyphicons/glyphicons-175-pause.png">
-    <img id="slideshow-play" alt="Play" title="Play" src="images/Glyphicons/glyphicons-174-play.png">
-    <img id="slideshow-next" alt="Next" title="Next" src="images/Glyphicons/glyphicons-177-forward.png">
-    <label>Interval in Seconds: <input id="slideshow-interval" /></label>
-    Viewing Image <span id="slideshow-index"></span> of <span id="slideshow-count"></span>
-    <!-- <a id="slideshow-similar" title="" href="#">View Similar</a> -->
-    <img id="slideshow-return-home" alt="Return Home" title="Return Home" src="images/Glyphicons/glyphicons-21-home.png">
-    <img id="slideshow-fullscreen" alt="Fullscreen" title="Fullscreen" src="images/Glyphicons/glyphicons-350-fullscreen.png">
-    <!-- <span id="home-away-status" title="Home/Away Status - Nest Integration" class="glyphicon glyphicon-signal"></span> -->
+    <div>
+        <span id="slideshow-controls">
+            <img id="slideshow-previous" alt="Previous" title="Previous" src="images/Glyphicons/glyphicons-173-rewind.png">
+            <img id="slideshow-pause" alt="Pause" title="Pause" src="images/Glyphicons/glyphicons-175-pause.png">
+            <img id="slideshow-play" alt="Play" title="Play" src="images/Glyphicons/glyphicons-174-play.png">
+            <img id="slideshow-next" alt="Next" title="Next" src="images/Glyphicons/glyphicons-177-forward.png">
+            <label>Interval in Seconds: <input id="slideshow-interval" /></label>
+            Viewing Image <span id="slideshow-index"></span> of <span id="slideshow-count"></span>
+        </span>
+        <!-- <a id="slideshow-similar" title="" href="#">View Similar</a> -->
+        <img class="pointer" id="slideshow-return-home" alt="Return Home" title="Return Home" src="images/Glyphicons/glyphicons-21-home.png">
+        <img class="pointer" id="slideshow-fullscreen" alt="Fullscreen" title="Fullscreen" src="images/Glyphicons/glyphicons-350-fullscreen.png">
+        <!-- <span id="home-away-status" title="Home/Away Status - Nest Integration" class="glyphicon glyphicon-signal"></span> -->
+    </div>
 </div>
 </body>
 </html>

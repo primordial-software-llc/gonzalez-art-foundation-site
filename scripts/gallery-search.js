@@ -1,24 +1,15 @@
-﻿
-function getImageUrl(item) {
-    if (item.s3Path) {
-        var url = '/api/Gallery/image/tgonzalez-image-archive/national-gallery-of-art-alt?s3Name=' +
-            item.s3Path.split('/').pop();
-        return url;
-    } else {
-        return 'https://www.the-athenaeum.org/art/display_image.php?id=' + item.imageId;
-    }
-}
+﻿const ApiBase = 'https://api.gonzalez-art-foundation.org/';
 
 function loadSearchResults(results) {
-    var html = '';
+    let html = '';
     html += '<div id="search-results-summary">Works of art found: ' + results.length + '</div>';
     html += '<div id="slideshow-start"><img src="/images/Glyphicons/glyphicons-9-film.png"> Start Slideshow </div>';
-    for (var ct = 0; ct < results.length; ct += 1) {
-        var result = results[ct];
-        html += '<div><a target="_blank" href="' + getImageUrl(result) + '" title="' + result.source + ' - ' + result.pageId + '"' + '>' +
-            results[ct].name +
-            ' (' + results[ct].date + ') by ' +
-            results[ct].originalArtist + '</a></div>';
+    for (let result of results) {
+        let imageUrl = `/image-viewer.html?source=${encodeURIComponent(result.source)}&pageId=${encodeURIComponent(result.pageId)}`;
+        html += '<div><a target="_blank" href="' + imageUrl + '" title="' + result.source + ' - ' + result.pageId + '"' + '>' +
+            result.name +
+            ' (' + result.date + ') by ' +
+            result.originalArtist + '</a></div>';
     }
 
     $('#search-results').html(html);
@@ -77,20 +68,19 @@ var getUrlParameter = function getUrlParameter(sParam) {
 
 $(document).ready(function () {
     let tags = getUrlParameter('tags');
-    let root = 'https://api.gonzalez-art-foundation.org/';
     if (tags) {
         $('#tagSearchText').val(tags);
     }
     $('#likeSearch').click(function () {
-        let url = `${root}unauthenticated/search-like-artist?artist=${encodeURIComponent($('#likeSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url = `${ApiBase}unauthenticated/search-like-artist?artist=${encodeURIComponent($('#likeSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
     $('#exactSearch').click(function () {
-        let url = `${root}unauthenticated/search-exact-artist?artist=${encodeURIComponent($('#exactSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url = `${ApiBase}unauthenticated/search-exact-artist?artist=${encodeURIComponent($('#exactSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
     $('#idSearch').click(function () {
-        let url = `${root}unauthenticated/scan?lastPageId=${encodeURIComponent($('#idSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url = `${ApiBase}unauthenticated/scan?lastPageId=${encodeURIComponent($('#idSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
         loadSearchResultsFromUrl(url);
     });
     /*
