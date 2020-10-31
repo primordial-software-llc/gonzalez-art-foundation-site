@@ -45,21 +45,7 @@
     }
 
     function showImage(currentImage) {
-        fetch(
-            `${ApiBase}unauthenticated/image?path=${currentImage.s3Path}`,
-            { mode: 'cors' }).then(function (response) {
-            response
-                .json()
-                .then(function (json) {
-                    if (assertSuccess(response, json)) {
-                        $('#slideshow-image').prop('src', json.base64Image);
-                    }
-                })
-                .catch(function (error) {
-                    console.log('Failed to get data:');
-                    console.log(error);
-                });
-        });
+        $('#slideshow-image').prop('src', `${ApiBase}unauthenticated/cache-everything/image?path=${currentImage.s3Path}`);
 
         let link;
         let linkText;
