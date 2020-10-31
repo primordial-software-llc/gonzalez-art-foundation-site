@@ -1,18 +1,43 @@
 ﻿const ApiBase = 'https://api.gonzalez-art-foundation.org/';
 
 function loadSearchResults(results) {
-    let html = '';
-    html += '<div id="search-results-summary">Works of art found: ' + results.length + '</div>';
-    html += '<div id="slideshow-start"><img src="/images/Glyphicons/glyphicons-9-film.png"> Start Slideshow </div>';
+
+    let summary = $('<div id="search-results-summary"></div>')
+    summary.text(`Works of art found: ${results.length}`);
+    $('#search-results').append(summary);
+
+    let searchItems = $('<div id="slideshow-start"></div>');
+    searchItems.append(`<img src="/images/Glyphicons/glyphicons-9-film.png"> Start Slideshow </div>`)
+    $('#search-results').append(searchItems);
     for (let result of results) {
         let imageUrl = `/image-viewer.html?source=${encodeURIComponent(result.source)}&pageId=${encodeURIComponent(result.pageId)}`;
-        html += '<div><a target="_blank" href="' + imageUrl + '" title="' + result.source + ' - ' + result.pageId + '"' + '>' +
-            result.name +
-            ' (' + result.date + ') by ' +
-            result.originalArtist + '</a></div>';
+        let imageLink = $('<a target="_blank"></a>');
+        imageLink.attr('href', imageUrl);
+        imageLink.attr('title', result.source + ' - ' + result.pageId);
+        imageLink.text(result.name + ' (' + result.date + ') by ' + result.originalArtist);
+        let imageLinkContainer = $('<div></div>');
+        imageLinkContainer.append(imageLink);
+        $('#search-results').append(imageLinkContainer);
+        /*
+        fetch(
+            `${ApiBase}unauthenticated/image?path=${result.s3Path}`,
+            { mode: 'cors' }).then(function (response) {
+            response
+                .json()
+                .then(function (json) {
+                    if (assertSuccess(response, json)) {
+                        let image = $(`<img id="slideshow-image" />`);
+                        image.prop('src', json.base64Image);
+                        imageLinkContainer.append(image);
+                    }
+                })
+                .catch(function (error) {
+                    console.log('Failed to get data:');
+                    console.log(error);
+                });
+        });
+         */
     }
-
-    $('#search-results').html(html);
 
     $('#slideshow-start').click(function () {
         localStorage.setItem("slideshowData", JSON.stringify(results));
@@ -40,7 +65,7 @@ function loadSearchResultsFromUrl(url) {
             .then(function (json) {
                 $('.loader-group').addClass('hide');
                 if (assertSuccess(response, json)) {
-                    loadSearchResults(json);   
+                    loadSearchResults(json);
                 }
             })
             .catch(function (error) {
