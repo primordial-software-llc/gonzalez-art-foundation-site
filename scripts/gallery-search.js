@@ -7,36 +7,42 @@ function loadSearchResults(results) {
     $('#search-results').append(summary);
 
     let searchItems = $('<div id="slideshow-start"></div>');
-    searchItems.append(`<img src="/images/Glyphicons/glyphicons-9-film.png"> Start Slideshow </div>`)
+    searchItems.append(`
+        <img class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png">
+        <span class="slideshow-start-text">Start Slideshow</span>
+    `);
     $('#search-results').append(searchItems);
-    for (let result of results) {
+    let resultRow;
+    for (let ct = 0; ct < results.length; ct++) {
+        let result = results[ct];
+        if (ct === 0 || ct % 3 == 0 || ct === results.length) {
+            resultRow = $('<div class="row image-search-row"></div>');
+            $('#search-results').append(resultRow);
+        }
+        let imageLinkContainer = $('<div class="col-4 text-center"></div>');
+
+        let image = $(`<img id="slideshow-image" class="image-search-item" />`);
+        image.prop('src', `${ApiBase}unauthenticated/cache-everything/image?path=${result.s3ThumbnailPath}`);
+        let imageWrapper = $('<div class="image-search-item-image-wrapper"></div>');
+        imageWrapper.append(image);
+
         let imageUrl = `/image-viewer.html?source=${encodeURIComponent(result.source)}&pageId=${encodeURIComponent(result.pageId)}`;
+
+        image.click(function () {
+            window.open(imageUrl, "_blank");
+        });
+
+        imageLinkContainer.append(imageWrapper);
+
         let imageLink = $('<a target="_blank"></a>');
         imageLink.attr('href', imageUrl);
         imageLink.attr('title', result.source + ' - ' + result.pageId);
         imageLink.text(result.name + ' (' + result.date + ') by ' + result.originalArtist);
-        let imageLinkContainer = $('<div></div>');
-        imageLinkContainer.append(imageLink);
-        $('#search-results').append(imageLinkContainer);
-        /*
-        fetch(
-            `${ApiBase}unauthenticated/image?path=${result.s3Path}`,
-            { mode: 'cors' }).then(function (response) {
-            response
-                .json()
-                .then(function (json) {
-                    if (assertSuccess(response, json)) {
-                        let image = $(`<img id="slideshow-image" />`);
-                        image.prop('src', json.base64Image);
-                        imageLinkContainer.append(image);
-                    }
-                })
-                .catch(function (error) {
-                    console.log('Failed to get data:');
-                    console.log(error);
-                });
-        });
-         */
+        let imageLinkWrapper = $('<div></div>');
+        imageLinkWrapper.append(imageLink);
+        imageLinkContainer.append(imageLinkWrapper);
+
+        resultRow.append(imageLinkContainer);
     }
 
     $('#slideshow-start').click(function () {

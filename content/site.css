@@ -16,6 +16,15 @@ body .btn {
 
 #slideshow-start {
     cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    display: inline-block;
+}
+
+.slideshow-start-image {
+    height: 30px;
+    width: 30px;
 }
 
 #login-form .form-control {
@@ -118,4 +127,23 @@ a.nav-link:hover {
 .loader-dialog {
     width: 50px;
     margin: 30px auto;
+}
+
+.image-search-row {
+    padding-bottom: 10px;
+}
+
+.image-search-item {
+    height: 200px;
+    cursor: pointer;
+}
+
+.image-search-item-image-wrapper {
+    height: 200px;
+}
+
+#slideshow-image {
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
 }
