@@ -102,18 +102,31 @@ $(document).ready(function () {
     if (tags) {
         $('#tagSearchText').val(tags);
     }
-    $('#likeSearch').click(function () {
-        let url = `${ApiBase}unauthenticated/search-like-artist?artist=${encodeURIComponent($('#likeSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+    $('input[name=search-type]').change(function () {
+        let selectedType = $('input[name=search-type]:checked').val();
+        let searchText = '';
+        if (selectedType === 'like-artist') {
+            searchText = 'van gogh'
+        } else if (selectedType === 'exact-artist') {
+            searchText = 'Vincent van Gogh';
+        } else if (selectedType === 'view-from-last-id') {
+            searchText = '0';
+        }
+        $('#search-text').val(searchText);
+    });
+    $('#run-search').click(function () {
+        let selectedType = $('input[name=search-type]:checked').val();
+        let url = '';
+        if (selectedType === 'like-artist') {
+            url = `${ApiBase}unauthenticated/search-like-artist?maxResults=${encodeURIComponent($('#max-results').val())}&artist=${encodeURIComponent($('#search-text').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        } else if (selectedType === 'exact-artist') {
+            url = `${ApiBase}unauthenticated/search-exact-artist?maxResults=${encodeURIComponent($('#max-results').val())}&artist=${encodeURIComponent($('#search-text').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        } else if (selectedType === 'view-from-last-id') {
+            url = `${ApiBase}unauthenticated/scan?maxResults=${encodeURIComponent($('#max-results').val())}&lastPageId=${encodeURIComponent($('#search-text').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        }
         loadSearchResultsFromUrl(url);
     });
-    $('#exactSearch').click(function () {
-        let url = `${ApiBase}unauthenticated/search-exact-artist?artist=${encodeURIComponent($('#exactSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
-        loadSearchResultsFromUrl(url);
-    });
-    $('#idSearch').click(function () {
-        let url = `${ApiBase}unauthenticated/scan?lastPageId=${encodeURIComponent($('#idSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
-        loadSearchResultsFromUrl(url);
-    });
+    $('input[name=search-type]').change();
     /*
     $('#tagSearch').click(function () {
         let url = `/api/Gallery/searchLabel?label=${encodeURIComponent($('#tagSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;

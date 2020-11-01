@@ -31,9 +31,9 @@
     <div class="container body-content">
         <h1>Digital Art Gallery Search</h1>
         <div>
-            <div class="input-form form-group row">
-                <label for="siteSelection" class="col-sm-1 col-form-label">Site</label>
-                <div class="col-sm-11">
+            <div class="input-form form-group row hide">
+                <label for="siteSelection" class="col-sm-2 col-form-label">Site:</label>
+                <div class="col-sm-10">
                     <select id="siteSelection" class="form-control">
                         <option value="http://www.the-athenaeum.org">https://www.the-athenaeum.org</option>
                         <!-- <option value="http://images.nga.gov">https://images.nga.gov</option> -->
@@ -41,26 +41,32 @@
                 </div>
             </div>
             <div class="input-form form-group row">
-                <label for="likeSearchText" class="col-sm-3 col-form-label">Search by Like Artist</label>
-                <div class="col-sm-9 search-group">
-                    <input id="likeSearchText" type="text" value="Renoir" class="form-control"/>
-                    <input id="likeSearch" type="button" value="Search" class="btn btn-secondary"/>
+                <label class="col-sm-2 col-form-label">Search Type:</label>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="like-artist" name="search-type" value="like-artist" checked="checked">
+                    <label for="like-artist">Like Artist</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="exact-artist" name="search-type" value="exact-artist">
+                    <label for="exact-artist">Exact Artist</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="view-from-last-id" name="search-type" value="view-from-last-id">
+                    <label for="view-from-last-id">View from last ID</label>
                 </div>
             </div>
             <div class="input-form form-group row">
-                <label for="exactSearchText" class="col-sm-3 col-form-label">Search by Exact Artist</label>
-                <div class="col-sm-9 search-group">
-                    <input id="exactSearchText" type="text" value="Pierre Auguste Renoir" class="form-control" />
-                    <input id="exactSearch" type="button" value="Search" class="btn btn-secondary" />
-                </div>
+                <label for="search-text" class="col-sm-2 col-form-label">Search Text:</label>
+                <input id="search-text" type="text" value="" class="col-sm-10 form-control"/>
             </div>
             <div class="input-form form-group row">
-                <label for="idSearchText" class="col-sm-3 col-form-label">View from last ID</label>
-                <div class="col-sm-9 search-group">
-                    <input id="idSearchText" type="text" value="0" class="form-control" />
-                    <input id="idSearch" type="button" value="Search" class="btn btn-secondary" />
-                </div>
+                <label for="max-results" class="col-sm-2 col-form-label">Max Results:</label>
+                <input id="max-results" type="text" class="col-sm-10 form-control" value="100" />
             </div>
+            <div class="input-form form-group row">
+                <input id="run-search" type="button" value="Search" class="btn btn-secondary"/>
+            </div>
+
             <!--
             <div class="input-form form-group row">
                 <label for="tagSearchText" class="col-sm-3 col-form-label">Search by a single Tag</label>
