@@ -50,6 +50,8 @@ function loadSearchResults(results) {
         localStorage.setItem("slideshowIndex", 0);
         window.location = "/image-viewer.html";
     });
+
+    $('#image-search')[0].scrollIntoView();
 }
 
 function assertSuccess(response, json) {
@@ -127,6 +129,14 @@ $(document).ready(function () {
         loadSearchResultsFromUrl(url);
     });
     $('input[name=search-type]').change();
+
+    $('.view-more-works-by-featured-artist').click(function () {
+
+        $('#exact-artist').prop('checked', true);
+        $('#search-text').val('Jean-Leon Gerome');
+        $('#max-results').val(0);
+        $('#run-search').click();
+    });
     /*
     $('#tagSearch').click(function () {
         let url = `/api/Gallery/searchLabel?label=${encodeURIComponent($('#tagSearchText').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;

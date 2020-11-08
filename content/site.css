@@ -147,3 +147,12 @@ a.nav-link:hover {
     max-width: 100%;
     object-fit: contain;
 }
+
+.featured-artist-piece {
+    width: 100%;
+}
+
+.view-more-works-by-featured-artist {
+    color: blue;
+    cursor: pointer;
+}
