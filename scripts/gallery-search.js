@@ -22,7 +22,7 @@ function loadSearchResults(results) {
         let imageLinkContainer = $('<div class="col-4 text-center"></div>');
 
         let image = $(`<img id="slideshow-image" class="image-search-item" />`);
-        image.prop('src', `${ApiBase}unauthenticated/cache-everything/image?path=${result.s3ThumbnailPath}`);
+        image.prop('src', `${ApiBase}unauthenticated/cache-everything/image?path=${result.s3Path}&thumbnail=thumbnail`);
         let imageWrapper = $('<div class="image-search-item-image-wrapper"></div>');
         imageWrapper.append(image);
 
@@ -64,24 +64,21 @@ function assertSuccess(response, json) {
     return true;
 }
 
-function loadSearchResultsFromUrl(url) {
+async function loadSearchResultsFromUrl(url) {
     $('#search-results').empty();
     $('.loader-group').removeClass('hide');
-    fetch(url, { credentials: "same-origin" }).then(function (response) {
-        response
-            .json()
-            .then(function (json) {
-                $('.loader-group').addClass('hide');
-                if (assertSuccess(response, json)) {
-                    loadSearchResults(json);
-                }
-            })
-            .catch(function (error) {
-                $('.loader-group').addClass('hide');
-                console.log('Failed to get data:');
-                console.log(error);
-            });
-    });
+    try {
+        let response = await fetch(url, { credentials: "same-origin" });
+        let json = await response.json();
+        if (assertSuccess(response, json)) {
+            loadSearchResults(json);
+        }
+    } catch (error) {
+        console.log('Failed to get data:');
+        console.log(error);
+    } finally {
+        $('.loader-group').addClass('hide');
+    }
 }
 
 var getUrlParameter = function getUrlParameter(sParam) {
