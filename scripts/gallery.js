@@ -53,13 +53,24 @@
         if (currentImage.source === 'http://images.nga.gov') {
             linkText = 'Courtesy National Gallery of Art, Washington';
             link = currentImage.sourceLink.replace('http://', 'https://');
+        } else if (currentImage.source == 'http://www.musee-orsay.fr') {
+            linkText = 'Courtesy Musée d\'Orsay in Paris, France';
+            link = currentImage.sourceLink;
+        } else if (currentImage.source == 'https://www.pop.culture.gouv.fr/notice/museo/M5031') {
+            linkText = 'Courtesy Musée du Louvre in Paris, France';
+            link = currentImage.sourceLink;
         } else {
             linkText = "Courtesy The Athenaeum";
             link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
         }
 
-        $('#slideshow-image-info').html(currentImage.name + ' (' + currentImage.date + ') by ' + currentImage.originalArtist +
-            ' - <a target="_blank" href="' + link + '">' + linkText + '</a>' + ' - Image id ' + currentImage.pageId);
+        $('#slideshow-image-info').append(
+            $('<span>').text(`${currentImage.name} (${currentImage.date}) by ${currentImage.originalArtist} - `));
+        let linkElement = $(`<a target="_blank">`);
+        linkElement.attr('href', link);
+        linkElement.text(linkText);
+        $('#slideshow-image-info').append(linkElement);
+        $('#slideshow-image-info').append($('<span>').text(` - Image id ${currentImage.pageId}`));
 
 
         return;
