@@ -64,6 +64,7 @@
             link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
         }
 
+        $('#slideshow-image-info').empty();
         $('#slideshow-image-info').append(
             $('<span>').text(`${currentImage.name} (${currentImage.date}) by ${currentImage.originalArtist} - `));
         let linkElement = $(`<a target="_blank">`);
