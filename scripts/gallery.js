@@ -47,19 +47,20 @@
     function showImage(currentImage) {
         $('#slideshow-image').prop('src', `${ApiBase}unauthenticated/cache-everything/image?path=${currentImage.s3Path}`);
 
-        let link;
+        let link = (currentImage.sourceLink || '').replace('http://', 'https://');
         let linkText;
 
         if (currentImage.source === 'http://images.nga.gov') {
             linkText = 'Courtesy National Gallery of Art, Washington';
-            link = currentImage.sourceLink.replace('http://', 'https://');
-        } else if (currentImage.source == 'http://www.musee-orsay.fr') {
+        } else if (currentImage.source === 'http://www.musee-orsay.fr') {
             linkText = 'Courtesy Musée d\'Orsay in Paris, France';
-            link = currentImage.sourceLink;
-        } else if (currentImage.source == 'https://www.pop.culture.gouv.fr/notice/museo/M5031') {
+        } else if (currentImage.source === 'https://www.pop.culture.gouv.fr/notice/museo/M5031') {
             linkText = 'Courtesy Musée du Louvre in Paris, France';
-            link = currentImage.sourceLink;
-        } else {
+        } else if (currentImage.source === 'https://www.pop.culture.gouv.fr') {
+            linkText = 'Ministère de la Culture, France'
+        } else if (currentImage.source === 'https://www.moma.org') {
+            linkText = 'The Museum of Modern Art in New York, United States';
+        } else if (!currentImage.source) {
             linkText = "Courtesy The Athenaeum";
             link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
         }
