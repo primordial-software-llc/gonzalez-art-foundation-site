@@ -128,9 +128,8 @@ $(document).ready(function () {
     $('input[name=search-type]').change();
 
     $('.view-more-works-by-featured-artist').click(function () {
-
         $('#exact-artist').prop('checked', true);
-        $('#search-text').val('Jean-Leon Gerome');
+        $('#search-text').val('Sir Lawrence Alma-Tadema');
         $('#max-results').val(0);
         $('#run-search').click();
     });

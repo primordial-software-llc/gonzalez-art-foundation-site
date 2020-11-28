@@ -57,7 +57,7 @@
         } else if (currentImage.source === 'https://www.pop.culture.gouv.fr/notice/museo/M5031') {
             linkText = 'Courtesy Musée du Louvre in Paris, France';
         } else if (currentImage.source === 'https://www.pop.culture.gouv.fr') {
-            linkText = 'Ministère de la Culture, France'
+            linkText = 'Ministère de la Culture in France'
         } else if (currentImage.source === 'https://www.moma.org') {
             linkText = 'The Museum of Modern Art in New York, United States';
         } else if (currentImage.source === 'http://www.the-athenaeum.org') {
