@@ -60,7 +60,7 @@
             linkText = 'Ministère de la Culture, France'
         } else if (currentImage.source === 'https://www.moma.org') {
             linkText = 'The Museum of Modern Art in New York, United States';
-        } else if (!currentImage.source) {
+        } else if (currentImage.source === 'http://www.the-athenaeum.org') {
             linkText = "Courtesy The Athenaeum";
             link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
         }
