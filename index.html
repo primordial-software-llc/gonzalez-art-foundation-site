@@ -40,10 +40,20 @@
         </p>
         <img class="featured-artist-piece" src="https://api.gonzalez-art-foundation.org/unauthenticated/cache-everything/image?path=collections/the-athenaeum/page-id-355.jpg" />
         <p class="text-center">The Roses of Heliogabalus (1888) by Sir Lawrence Alma-Tadema</p>
-
         <h2 id="image-search">Image Search</h2>
         <div>
             <div class="input-form form-group row">
+                <label class="col-sm-2 col-form-label">Search Type:</label>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="like-artist" name="search-type" value="search-by-text" checked="checked">
+                    <label for="like-artist">Text</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" id="view-from-last-id" name="search-type" value="view-from-last-id">
+                    <label for="view-from-last-id">Scan source by last ID</label>
+                </div>
+            </div>
+            <div class="input-form form-group row site-input-group">
                 <label for="siteSelection" class="col-sm-2 col-form-label">Site:</label>
                 <select id="siteSelection" class="form-control col-sm-10">
                     <option value="http://www.the-athenaeum.org">The Athenaeum</option>
@@ -54,22 +64,11 @@
                     <option value="https://www.pop.culture.gouv.fr">Ministère de la Culture in France</option>
                 </select>
             </div>
-            <div class="input-form form-group row">
-                <label class="col-sm-2 col-form-label">Search Type:</label>
-                <div class="form-check form-check-inline">
-                    <input type="radio" id="like-artist" name="search-type" value="like-artist" checked="checked">
-                    <label for="like-artist">Like Artist</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input type="radio" id="exact-artist" name="search-type" value="exact-artist">
-                    <label for="exact-artist">Exact Artist</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input type="radio" id="view-from-last-id" name="search-type" value="view-from-last-id">
-                    <label for="view-from-last-id">View from last ID</label>
-                </div>
+            <div class="input-form form-group row last-id-input-group">
+                <label for="search-last-id" class="col-sm-2 col-form-label">Last ID:</label>
+                <input id="search-last-id" type="text" value="" class="col-sm-10 form-control"/>
             </div>
-            <div class="input-form form-group row">
+            <div class="input-form form-group row search-text-input-group">
                 <label for="search-text" class="col-sm-2 col-form-label">Search Text:</label>
                 <input id="search-text" type="text" value="" class="col-sm-10 form-control"/>
             </div>

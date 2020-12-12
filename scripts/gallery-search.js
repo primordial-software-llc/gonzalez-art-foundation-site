@@ -103,25 +103,31 @@ $(document).ready(function () {
     }
     $('input[name=search-type]').change(function () {
         let selectedType = $('input[name=search-type]:checked').val();
-        let searchText = '';
-        if (selectedType === 'like-artist') {
-            searchText = 'van gogh'
-        } else if (selectedType === 'exact-artist') {
-            searchText = 'Vincent van Gogh';
+        if (selectedType === 'search-by-text') {
+            $('.site-input-group').hide();
+            $('.last-id-input-group').hide();
+            $('.search-text-input-group').show();
+            $('#search-text').val('van gogh');
         } else if (selectedType === 'view-from-last-id') {
             searchText = '0';
+            $('.site-input-group').show();
+            $('.last-id-input-group').show();
+            $('.search-text-input-group').hide();
+            $('#search-last-id').val('0');
         }
-        $('#search-text').val(searchText);
     });
     $('#run-search').click(function () {
         let selectedType = $('input[name=search-type]:checked').val();
-        let url = '';
-        if (selectedType === 'like-artist') {
-            url = `${ApiBase}unauthenticated/search-like-artist?maxResults=${encodeURIComponent($('#max-results').val())}&artist=${encodeURIComponent($('#search-text').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
-        } else if (selectedType === 'exact-artist') {
-            url = `${ApiBase}unauthenticated/search-exact-artist?maxResults=${encodeURIComponent($('#max-results').val())}&artist=${encodeURIComponent($('#search-text').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+        let url;
+        if (selectedType === 'search-by-text') {
+            url = `${ApiBase}unauthenticated/search` +
+                `?maxResults=${encodeURIComponent($('#max-results').val())}` +
+                `&searchText=${encodeURIComponent($('#search-text').val())}`;
         } else if (selectedType === 'view-from-last-id') {
-            url = `${ApiBase}unauthenticated/scan?maxResults=${encodeURIComponent($('#max-results').val())}&lastPageId=${encodeURIComponent($('#search-text').val())}&source=${encodeURIComponent($('#siteSelection').val())}`;
+            url = `${ApiBase}unauthenticated/scan` +
+                `?maxResults=${encodeURIComponent($('#max-results').val())}` +
+                `&lastPageId=${encodeURIComponent($('#search-last-id').val())}` +
+                `&source=${encodeURIComponent($('#siteSelection').val())}`;
         }
         loadSearchResultsFromUrl(url);
     });
