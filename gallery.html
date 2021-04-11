@@ -5,9 +5,9 @@
     <title>Image Viewer - Digital Art Gallery</title>
     <link rel="stylesheet" type="text/css" href="content/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="content/site.css">
-    <script src="scripts/jquery-3.5.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="content/image-viewer.css">
-    <script src="scripts/gallery.js"></script>
+    <script src="src/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="content/gallery.css">
+    <script src="app.bundle.js"></script>
 </head>
 <body>
 <div id="slideshow-image-container">
@@ -24,10 +24,9 @@
             <label>Interval in Seconds: <input id="slideshow-interval" /></label>
             Viewing Image <span id="slideshow-index"></span> of <span id="slideshow-count"></span>
         </span>
-        <!-- <a id="slideshow-similar" title="" href="#">View Similar</a> -->
         <img class="pointer" id="slideshow-return-home" alt="Return Home" title="Return Home" src="images/Glyphicons/glyphicons-21-home.png">
         <img class="pointer" id="slideshow-fullscreen" alt="Fullscreen" title="Fullscreen" src="images/Glyphicons/glyphicons-350-fullscreen.png">
-        <!-- <span id="home-away-status" title="Home/Away Status - Nest Integration" class="glyphicon glyphicon-signal"></span> -->
+        <img class="pointer" id="slideshow-settings" alt="Settings" title="Settings" src="images/Glyphicons/glyphicons-137-cogwheel.png" />
     </div>
 </div>
 </body>

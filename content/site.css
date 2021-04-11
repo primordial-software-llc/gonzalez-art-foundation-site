@@ -1,7 +1,6 @@
 ﻿
 #main-nav {
     margin-top: 20px;
-    margin-bottom: 20px;
 }
 
 body .form-control {
@@ -65,8 +64,7 @@ a.nav-link:hover {
     cursor: pointer;
 }
 
-#idSearchText,
-#tagSearchText {
+#idSearchText {
     width: 85%;
 }
 

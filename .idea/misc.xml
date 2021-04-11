@@ -75,4 +75,7 @@
       <textMaps />
     </LinkMapSettings>
   </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/app.bundle.js" />
+  </component>
 </project>
