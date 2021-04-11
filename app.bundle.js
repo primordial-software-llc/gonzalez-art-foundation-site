@@ -6029,6 +6029,17 @@ class HomePage {
     }
   }
 
+  getSiteOptions() {
+    return `
+            <option value="http://www.the-athenaeum.org">The Athenaeum</option>
+            <option value="https://www.moma.org">The Museum of Modern Art in New York, United States</option>
+            <option value="http://images.nga.gov">National Gallery of Art in Washington D.C., United States</option>
+            <option value="http://www.musee-orsay.fr">Musée d'Orsay in Paris, France</option>
+            <option value="https://www.pop.culture.gouv.fr/notice/museo/M5031">Musée du Louvre in Paris, France</option>
+            <option value="https://www.pop.culture.gouv.fr">Ministère de la Culture in France</option>
+            <option value="https://www.christies.com">Christie's Auction House</option>`;
+  }
+
   init() {
     const self = this; //let onLoadSearchText = this.getUrlParameter('search');
     //if (onLoadSearchText) {
@@ -6038,15 +6049,17 @@ class HomePage {
     //}
 
     $('input[name=search-type]').change(function () {
+      $('#siteSelection').empty();
       let selectedType = $('input[name=search-type]:checked').val();
 
       if (selectedType === 'search-by-text') {
-        $('.site-input-group').hide();
+        $('#siteSelection').append(`<option value="">All</option>`);
+        $('#siteSelection').append(self.getSiteOptions());
         $('.last-id-input-group').hide();
         $('.search-text-input-group').show();
         $('#search-text').val('van gogh');
       } else if (selectedType === 'view-from-last-id') {
-        $('.site-input-group').show();
+        $('#siteSelection').append(self.getSiteOptions());
         $('.last-id-input-group').show();
         $('.search-text-input-group').hide();
         $('#search-last-id').val('0');
@@ -6057,7 +6070,7 @@ class HomePage {
       let url;
 
       if (selectedType === 'search-by-text') {
-        url = `${ApiBase}unauthenticated/search` + `?maxResults=${encodeURIComponent($('#max-results').val())}` + `&searchText=${encodeURIComponent($('#search-text').val())}`;
+        url = `${ApiBase}unauthenticated/search` + `?maxResults=${encodeURIComponent($('#max-results').val())}` + `&searchText=${encodeURIComponent($('#search-text').val())}` + `&source=${encodeURIComponent($('#siteSelection').val())}`;
       } else if (selectedType === 'view-from-last-id') {
         url = `${ApiBase}unauthenticated/scan` + `?maxResults=${encodeURIComponent($('#max-results').val())}` + `&lastPageId=${encodeURIComponent($('#search-last-id').val())}` + `&source=${encodeURIComponent($('#siteSelection').val())}`;
       }
