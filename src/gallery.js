@@ -1,6 +1,7 @@
 ﻿const ApiBase = 'https://api.gonzalez-art-foundation.org/';
 import Url from './url';
 import SlideShowSettingsForm from './slideshow-settings-form';
+import moment from 'moment';
 export default class Gallery {
 
     constructor() {
@@ -42,24 +43,41 @@ export default class Gallery {
         let linkText;
 
         if (currentImage.source === 'http://images.nga.gov') {
-            linkText = 'Courtesy National Gallery of Art, Washington';
+            linkText = 'National Gallery of Art, Washington';
         } else if (currentImage.source === 'http://www.musee-orsay.fr') {
-            linkText = 'Courtesy Musée d\'Orsay in Paris, France';
+            linkText = 'Musée d\'Orsay in Paris, France';
         } else if (currentImage.source === 'https://www.pop.culture.gouv.fr/notice/museo/M5031') {
-            linkText = 'Courtesy Musée du Louvre in Paris, France';
+            linkText = 'Musée du Louvre in Paris, France';
         } else if (currentImage.source === 'https://www.pop.culture.gouv.fr') {
             linkText = 'Ministère de la Culture in France'
         } else if (currentImage.source === 'https://www.moma.org') {
             linkText = 'The Museum of Modern Art in New York, United States';
         } else if (currentImage.source === 'http://www.the-athenaeum.org') {
-            linkText = "Courtesy The Athenaeum";
+            linkText = "The Athenaeum";
             link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
+        } else if (currentImage.source === 'https://www.christies.com') {
+            linkText = "Christie's"
+        }
+        $('#slideshow-image-info').empty();
+        if (currentImage.name) {
+            $('#slideshow-image-info').append($('<span>').text(`${currentImage.name} `));
+        }
+        if (currentImage.date) {
+            $('#slideshow-image-info').append($('<span>').text(`(${currentImage.date || ''}) `));
+        }
+        if (currentImage.originalArtist) {
+            $('#slideshow-image-info').append($('<span>').text(`by ${currentImage.originalArtist || ''} - `))
         }
         $('#slideshow-image-info')
-            .empty()
-            .append($('<span>').text(`${currentImage.name} (${currentImage.date}) by ${currentImage.originalArtist} - `))
             .append($(`<a target="_blank">`).attr('href', link).text(linkText))
             .append($('<span>').text(` - Image id ${currentImage.pageId}`));
+        if (currentImage.price) {
+            let formattedPrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: currentImage.priceCurrency, maximumFractionDigits: 2 })
+                .format(currentImage.price);
+            $('#slideshow-image-info')
+                .append('<br/>')
+                .append($('<span>').text(`Indexed at ${moment(currentImage['@timestamp']).format("yyyy-M-D h:mm A")} - Price ${formattedPrice}`))
+        }
     }
 
     previousImage() {
@@ -194,10 +212,6 @@ export default class Gallery {
             self.slideshowTimer = setInterval(slideshowTimerAction, intervalInMs);
             $('#slideshow-pause').show();
             $('#slideshow-play').hide();
-        });
-        $('#slideshow-settings').click(function() {
-            let slideShowSettingsForm = new SlideShowSettingsForm();
-            $('body').append(slideShowSettingsForm.getView());
         });
     }
 }

@@ -16,7 +16,8 @@
   },
   "homepage": "https://github.com/primordial-software-llc/income-calculator/tree/gh-pages#readme",
   "dependencies": {
-    "browser-resolve": "^2.0.0"
+    "browser-resolve": "^2.0.0",
+    "moment": "^2.29.1"
   },
   "devDependencies": {
     "browserify": "^17.0.0",
