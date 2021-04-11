@@ -109,7 +109,7 @@ export default class HomePage {
                 $('#siteSelection').append(self.getSiteOptions());
                 $('.last-id-input-group').hide();
                 $('.search-text-input-group').show();
-                $('#search-text').val('van gogh');
+                $('#search-text').val('Sir Lawrence Alma-Tadema');
             } else if (selectedType === 'view-from-last-id') {
                 $('#siteSelection').append(self.getSiteOptions());
                 $('.last-id-input-group').show();
