@@ -22,7 +22,7 @@ body {
 
 .slideshow-player  {
     text-align: center;
-    height: 8%
+    height: 9%
 }
 
 .slideshow-player img {
@@ -39,7 +39,7 @@ body {
 }
 
 #slideshow-image-container {
-    height: 92%;
+    height: 91%;
     text-align: center;
 }
 
