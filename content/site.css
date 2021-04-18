@@ -154,3 +154,10 @@ a.nav-link:hover {
     color: blue;
     cursor: pointer;
 }
+
+.custom-blockquote {
+    background-color: #E0E0E0;
+    display: inline-block;
+    padding: 10px;
+    margin-left: 15px;
+}
