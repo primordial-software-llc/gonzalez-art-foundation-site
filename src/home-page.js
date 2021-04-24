@@ -124,12 +124,14 @@ export default class HomePage {
                 url = `${ApiBase}unauthenticated/search` +
                     `?maxResults=${encodeURIComponent($('#max-results').val())}` +
                     `&searchText=${encodeURIComponent($('#search-text').val())}` +
-                    `&source=${encodeURIComponent($('#siteSelection').val())}`;
+                    `&source=${encodeURIComponent($('#siteSelection').val())}` +
+                    `&hideNudity=${encodeURIComponent($('#hide-nudity').is(':checked'))}`
             } else if (selectedType === 'view-from-last-id') {
                 url = `${ApiBase}unauthenticated/scan` +
                     `?maxResults=${encodeURIComponent($('#max-results').val())}` +
                     `&lastPageId=${encodeURIComponent($('#search-last-id').val())}` +
-                    `&source=${encodeURIComponent($('#siteSelection').val())}`;
+                    `&source=${encodeURIComponent($('#siteSelection').val())}` +
+                    `&hideNudity=${encodeURIComponent($('#hide-nudity').is(':checked'))}`;
             }
             self.loadSearchResultsFromUrl(url);
         });
