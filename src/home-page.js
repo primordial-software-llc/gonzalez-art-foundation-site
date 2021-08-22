@@ -1,4 +1,5 @@
 ﻿const ApiBase = 'https://api.gonzalez-art-foundation.org/';
+import Url from './url';
 
 export default class HomePage {
 
@@ -86,21 +87,18 @@ export default class HomePage {
         return `
             <option value="http://www.the-athenaeum.org">The Athenaeum</option>
             <option value="https://www.moma.org">The Museum of Modern Art in New York, United States</option>
+            <option value="https://www.metmuseum.org">The Metropolitan Museum of Art in New York, United States</option>
             <option value="http://images.nga.gov">National Gallery of Art in Washington D.C., United States</option>
             <option value="http://www.musee-orsay.fr">Musée d'Orsay in Paris, France</option>
             <option value="https://www.pop.culture.gouv.fr/notice/museo/M5031">Musée du Louvre in Paris, France</option>
-            <option value="https://www.pop.culture.gouv.fr">Ministère de la Culture in France</option>
-            <option value="https://www.christies.com">Christie's Auction House</option>`;
+            <option value="https://www.pop.culture.gouv.fr">Ministère de la Culture in France</option>`;
     }
 
     init() {
         const self = this;
-        //let onLoadSearchText = this.getUrlParameter('search');
-        //if (onLoadSearchText) {
-            // UPDATE THIS. I WANT TO FIND ALL LIKE ARTISTS TO CLICK AN ARTIST NAME IN THE IMAGE VIEWER/GALLERY/HERE
-            // AND SEE THOSE ARTISTS WORKS OF ARTS.
-            // TAGS CAN COME BACK LATER. THERE IS NOT ADEQUATE TAGGING TO USE THE FEATURE RIGHT NOW PUBLICLY.
-        //}
+        const defaultSearchText = 'Sir Lawrence Alma-Tadema';
+        const onLoadSearchText = Url.getUrlParameter('search');
+        let searchText = onLoadSearchText || defaultSearchText;
         $('input[name=search-type]').change(function () {
             $('#siteSelection').empty();
             let selectedType = $('input[name=search-type]:checked').val();
@@ -109,7 +107,7 @@ export default class HomePage {
                 $('#siteSelection').append(self.getSiteOptions());
                 $('.last-id-input-group').hide();
                 $('.search-text-input-group').show();
-                $('#search-text').val('Sir Lawrence Alma-Tadema');
+                $('#search-text').val(searchText);
             } else if (selectedType === 'view-from-last-id') {
                 $('#siteSelection').append(self.getSiteOptions());
                 $('.last-id-input-group').show();
@@ -135,7 +133,6 @@ export default class HomePage {
             }
             self.loadSearchResultsFromUrl(url);
         });
-        $('input[name=search-type]').change();
 
         $('.view-more-works-by-featured-artist').click(function () {
             $('#exact-artist').prop('checked', true);
@@ -143,5 +140,10 @@ export default class HomePage {
             $('#max-results').val(0);
             $('#run-search').click();
         });
+
+        $('input[name=search-type]').change();
+        if (onLoadSearchText) {
+            $('#run-search').click();
+        }
     }
 }

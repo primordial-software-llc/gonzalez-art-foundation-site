@@ -5673,6 +5673,8 @@
 },{}],2:[function(require,module,exports){
 "use strict";
 
+var _artists = _interopRequireDefault(require("./artists"));
+
 var _gallery = _interopRequireDefault(require("./gallery"));
 
 var _homePage = _interopRequireDefault(require("./home-page"));
@@ -5690,6 +5692,8 @@ $(document).ready(function () {
     controller = new _homePage.default();
   } else if (path === '/gallery.html') {
     controller = new _gallery.default();
+  } else if (path === '/artists.html') {
+    controller = new _artists.default();
   }
 
   if (controller) {
@@ -5697,7 +5701,58 @@ $(document).ready(function () {
   }
 });
 
-},{"./gallery":3,"./home-page":4,"./navigation":5}],3:[function(require,module,exports){
+},{"./artists":3,"./gallery":4,"./home-page":5,"./navigation":6}],3:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const ApiBase = 'https://api.gonzalez-art-foundation.org/';
+
+class Artists {
+  assertSuccess(response, json) {
+    if (!response || response.status < 200 || response.status > 299) {
+      console.log(response);
+      console.log(json);
+      alert('Failed to get data: ' + JSON.stringify(json, 0, 4));
+      return false;
+    }
+
+    return true;
+  }
+
+  loadArtists(artists) {
+    let artistList = $('<ul class="artist-list"></ul>');
+
+    for (let artist of artists) {
+      artistList.append(`<li><a target="_blank" href='/index.html?search=${encodeURIComponent(artist.artist)}'>${artist.originalArtist}</a></li>`);
+    }
+
+    $('.artists-container').empty().append(artistList);
+  }
+
+  init() {
+    let self = this;
+    fetch(`${ApiBase}unauthenticated/cache-everything/artist`, {
+      mode: 'cors'
+    }).then(function (response) {
+      response.json().then(json => {
+        if (self.assertSuccess(response, json)) {
+          self.loadArtists(json);
+        }
+      }).catch(function (error) {
+        console.log('Failed to get data:');
+        console.log(error);
+      });
+    });
+  }
+
+}
+
+exports.default = Artists;
+
+},{}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5722,14 +5777,9 @@ class Gallery {
 
   assertSuccess(response, json) {
     if (!response || response.status < 200 || response.status > 299) {
-      if (json && json.ExceptionMessage === 'Not authenticated') {
-        alert('Please Login');
-      } else {
-        console.log(response);
-        console.log(json);
-        alert('Failed to get data: ' + JSON.stringify(json, 0, 4));
-      }
-
+      console.log(response);
+      console.log(json);
+      alert('Failed to get data: ' + JSON.stringify(json, 0, 4));
       return false;
     }
 
@@ -5940,13 +5990,18 @@ class Gallery {
 
 exports.default = Gallery;
 
-},{"./slideshow-settings-form":6,"./url":7,"moment":1}],4:[function(require,module,exports){
+},{"./slideshow-settings-form":7,"./url":8,"moment":1}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _url = _interopRequireDefault(require("./url"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 const ApiBase = 'https://api.gonzalez-art-foundation.org/';
 
 class HomePage {
@@ -6033,21 +6088,20 @@ class HomePage {
     return `
             <option value="http://www.the-athenaeum.org">The Athenaeum</option>
             <option value="https://www.moma.org">The Museum of Modern Art in New York, United States</option>
+            <option value="https://www.metmuseum.org">The Metropolitan Museum of Art in New York, United States</option>
             <option value="http://images.nga.gov">National Gallery of Art in Washington D.C., United States</option>
             <option value="http://www.musee-orsay.fr">Musée d'Orsay in Paris, France</option>
             <option value="https://www.pop.culture.gouv.fr/notice/museo/M5031">Musée du Louvre in Paris, France</option>
-            <option value="https://www.pop.culture.gouv.fr">Ministère de la Culture in France</option>
-            <option value="https://www.christies.com">Christie's Auction House</option>`;
+            <option value="https://www.pop.culture.gouv.fr">Ministère de la Culture in France</option>`;
   }
 
   init() {
-    const self = this; //let onLoadSearchText = this.getUrlParameter('search');
-    //if (onLoadSearchText) {
-    // UPDATE THIS. I WANT TO FIND ALL LIKE ARTISTS TO CLICK AN ARTIST NAME IN THE IMAGE VIEWER/GALLERY/HERE
-    // AND SEE THOSE ARTISTS WORKS OF ARTS.
-    // TAGS CAN COME BACK LATER. THERE IS NOT ADEQUATE TAGGING TO USE THE FEATURE RIGHT NOW PUBLICLY.
-    //}
+    const self = this;
+    const defaultSearchText = 'Sir Lawrence Alma-Tadema';
 
+    const onLoadSearchText = _url.default.getUrlParameter('search');
+
+    let searchText = onLoadSearchText || defaultSearchText;
     $('input[name=search-type]').change(function () {
       $('#siteSelection').empty();
       let selectedType = $('input[name=search-type]:checked').val();
@@ -6057,7 +6111,7 @@ class HomePage {
         $('#siteSelection').append(self.getSiteOptions());
         $('.last-id-input-group').hide();
         $('.search-text-input-group').show();
-        $('#search-text').val('Sir Lawrence Alma-Tadema');
+        $('#search-text').val(searchText);
       } else if (selectedType === 'view-from-last-id') {
         $('#siteSelection').append(self.getSiteOptions());
         $('.last-id-input-group').show();
@@ -6077,20 +6131,24 @@ class HomePage {
 
       self.loadSearchResultsFromUrl(url);
     });
-    $('input[name=search-type]').change();
     $('.view-more-works-by-featured-artist').click(function () {
       $('#exact-artist').prop('checked', true);
       $('#search-text').val('Sir Lawrence Alma-Tadema');
       $('#max-results').val(0);
       $('#run-search').click();
     });
+    $('input[name=search-type]').change();
+
+    if (onLoadSearchText) {
+      $('#run-search').click();
+    }
   }
 
 }
 
 exports.default = HomePage;
 
-},{}],5:[function(require,module,exports){
+},{"./url":8}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6111,6 +6169,9 @@ class Navigation {
                         <a class="nav-link" href="gallery.html">Gallery</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="artists.html">Artists</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="about.html">About</a>
                     </li>
                     <li class="nav-item">
@@ -6125,7 +6186,7 @@ class Navigation {
 
 exports.default = Navigation;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6150,7 +6211,7 @@ class SlideShowSettingsForm {
 
 exports.default = SlideShowSettingsForm;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

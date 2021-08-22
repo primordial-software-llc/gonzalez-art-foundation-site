@@ -11,6 +11,9 @@ export default class Navigation {
                         <a class="nav-link" href="gallery.html">Gallery</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="artists.html">Artists</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="about.html">About</a>
                     </li>
                     <li class="nav-item">
