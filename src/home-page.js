@@ -3,9 +3,15 @@ import Url from './url';
 
 export default class HomePage {
 
-    loadSearchResults(results) {
+    loadSearchResults(searchResult) {
         let summary = $('<div id="search-results-summary"></div>')
-        summary.text(`Works of art found: ${results.length}`);
+        let results = searchResult.items || searchResult;
+        if (searchResult.items) {
+            summary.text(`Showing ${searchResult.searchFrom+1} to ${searchResult.searchFrom+searchResult.items.length} of ${searchResult.total}${searchResult.maxSearchResultsHit ? '+' : ''} works of art`);
+        } else {
+            summary.text(`Showing ${results.length} works of art`);
+        }
+
         $('#search-results').append(summary);
 
         let searchItems = $('<div id="slideshow-start"></div>');
@@ -123,7 +129,8 @@ export default class HomePage {
                     `?maxResults=${encodeURIComponent($('#max-results').val())}` +
                     `&searchText=${encodeURIComponent($('#search-text').val())}` +
                     `&source=${encodeURIComponent($('#siteSelection').val())}` +
-                    `&hideNudity=${encodeURIComponent($('#hide-nudity').is(':checked'))}`
+                    `&hideNudity=${encodeURIComponent($('#hide-nudity').is(':checked'))}` +
+                    `&searchFrom=${encodeURIComponent('0')}`; // WARNING UPDATE THIS TO USE PAGINATION
             } else if (selectedType === 'view-from-last-id') {
                 url = `${ApiBase}unauthenticated/scan` +
                     `?maxResults=${encodeURIComponent($('#max-results').val())}` +
