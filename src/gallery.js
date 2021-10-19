@@ -1,4 +1,5 @@
 ﻿const ApiBase = 'https://api.gonzalez-art-foundation.org/';
+const ImageBase = 'https://images.gonzalez-art-foundation.org/';
 import Url from './url';
 import SlideShowSettingsForm from './slideshow-settings-form';
 import moment from 'moment';
@@ -33,7 +34,7 @@ export default class Gallery {
     }
 
     showImage(currentImage) {
-        $('#slideshow-image').prop('src', `${ApiBase}unauthenticated/cache-everything/image?path=${currentImage.s3Path}`);
+        $('#slideshow-image').prop('src', `${ImageBase}${currentImage.s3Path}`);
 
         let link = (currentImage.sourceLink || '').replace('http://', 'https://');
         let linkText;
