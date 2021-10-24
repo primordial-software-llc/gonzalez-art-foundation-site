@@ -5673,6 +5673,54 @@
 },{}],2:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const ApiBase = 'https://api.gonzalez-art-foundation.org/';
+
+class Api {
+  static getApiBase() {
+    return ApiBase;
+  }
+
+  static getSearchUrl(maxResults, searchText, source, hideNudity, searchFrom) {
+    return `${ApiBase}unauthenticated/search` + `?maxResults=${encodeURIComponent(maxResults)}` + `&searchText=${encodeURIComponent(searchText)}` + `&source=${encodeURIComponent(source)}` + `&hideNudity=${encodeURIComponent(hideNudity)}` + `&searchFrom=${encodeURIComponent(searchFrom)}`;
+  }
+
+  static assertSuccess(response, json) {
+    if (!response || response.status < 200 || response.status > 299) {
+      console.log('Request failed:');
+      console.log(response);
+      console.log(json);
+      alert('Failed to get data: ' + JSON.stringify(json, 0, 4));
+      throw 'Failed to get data: ' + JSON.stringify(json, 0, 4);
+    }
+  }
+
+  static async get(url) {
+    $('.loader-group').removeClass('hide');
+    let json;
+
+    try {
+      let response = await fetch(url, {
+        credentials: "same-origin"
+      });
+      json = await response.json();
+      this.assertSuccess(response, json);
+      return json;
+    } finally {
+      $('.loader-group').addClass('hide');
+    }
+  }
+
+}
+
+exports.default = Api;
+
+},{}],3:[function(require,module,exports){
+"use strict";
+
 var _artists = _interopRequireDefault(require("./artists"));
 
 var _gallery = _interopRequireDefault(require("./gallery"));
@@ -5701,7 +5749,7 @@ $(document).ready(function () {
   }
 });
 
-},{"./artists":3,"./gallery":4,"./home-page":5,"./navigation":6}],3:[function(require,module,exports){
+},{"./artists":4,"./gallery":5,"./home-page":6,"./navigation":7}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5752,13 +5800,15 @@ class Artists {
 
 exports.default = Artists;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _api = _interopRequireDefault(require("./api"));
 
 var _url = _interopRequireDefault(require("./url"));
 
@@ -5788,7 +5838,7 @@ class Gallery {
   }
 
   showCurrentImage() {
-    let slideshowItems = JSON.parse(localStorage.getItem('slideshowData'));
+    let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
     let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex"));
 
     if (isNaN(slideshowIndex)) {
@@ -5797,9 +5847,10 @@ class Gallery {
       return;
     }
 
-    let currentImage = slideshowItems[slideshowIndex];
-    $('#slideshow-index').html(slideshowIndex + 1);
-    $('#slideshow-count').html(slideshowItems.length);
+    let currentImage = jsonSearchResult.items[slideshowIndex];
+    $('#slideshow-index').html(jsonSearchResult.searchFrom + slideshowIndex + 1);
+    let totalItems = `${jsonSearchResult.total}${jsonSearchResult.maxSearchResultsHit ? '+' : ''}`;
+    $('#slideshow-count').html(totalItems);
     this.showImage(currentImage);
   }
 
@@ -5821,8 +5872,6 @@ class Gallery {
     } else if (currentImage.source === 'http://www.the-athenaeum.org') {
       linkText = "The Athenaeum";
       link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
-    } else if (currentImage.source === 'https://www.christies.com') {
-      linkText = "Christie's";
     }
 
     $('#slideshow-image-info').empty();
@@ -5851,15 +5900,38 @@ class Gallery {
     }
   }
 
-  previousImage() {
+  async previousImage() {
     let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
-    localStorage.setItem("slideshowIndex", slideshowIndex - 1);
+
+    if (slideshowIndex <= 0) {
+      let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
+
+      let url = _api.default.getSearchUrl(jsonSearchResult.maxResults, jsonSearchResult.searchText, jsonSearchResult.source, jsonSearchResult.hideNudity, jsonSearchResult.searchFrom - jsonSearchResult.maxResults);
+
+      let newJsonSearchResult = await _api.default.get(url);
+      localStorage.setItem("slideshowData", JSON.stringify(newJsonSearchResult));
+      localStorage.setItem("slideshowIndex", 0);
+    } else {
+      localStorage.setItem("slideshowIndex", slideshowIndex - 1);
+    }
+
     this.showCurrentImage();
   }
 
-  nextImage() {
+  async nextImage() {
     let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
-    localStorage.setItem("slideshowIndex", slideshowIndex + 1);
+    let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
+
+    if (slideshowIndex + 2 > jsonSearchResult.items.length) {
+      let url = _api.default.getSearchUrl(jsonSearchResult.maxResults, jsonSearchResult.searchText, jsonSearchResult.source, jsonSearchResult.hideNudity, jsonSearchResult.searchFrom + jsonSearchResult.maxResults);
+
+      let newJsonSearchResult = await _api.default.get(url);
+      localStorage.setItem("slideshowData", JSON.stringify(newJsonSearchResult));
+      localStorage.setItem("slideshowIndex", 0);
+    } else {
+      localStorage.setItem("slideshowIndex", slideshowIndex + 1);
+    }
+
     this.showCurrentImage();
   }
 
@@ -5991,7 +6063,7 @@ class Gallery {
 
 exports.default = Gallery;
 
-},{"./slideshow-settings-form":7,"./url":8,"moment":1}],5:[function(require,module,exports){
+},{"./api":2,"./slideshow-settings-form":8,"./url":9,"moment":1}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5999,24 +6071,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _api = _interopRequireDefault(require("./api"));
+
 var _url = _interopRequireDefault(require("./url"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const ApiBase = 'https://api.gonzalez-art-foundation.org/';
-
 class HomePage {
-  loadSearchResults(searchResult) {
-    let summary = $('<div id="search-results-summary"></div>');
-    let results = searchResult.items || searchResult;
+  constructor() {
+    this.searchFrom = 0;
+  }
 
-    if (searchResult.items) {
-      summary.text(`Showing ${searchResult.searchFrom + 1} to ${searchResult.searchFrom + searchResult.items.length} of ${searchResult.total}${searchResult.maxSearchResultsHit ? '+' : ''} works of art`);
-    } else {
-      summary.text(`Showing ${results.length} works of art`);
-    }
-
-    $('#search-results').append(summary);
+  loadSearchResults(jsonSearchResult) {
+    let self = this;
     let searchItems = $('<div id="slideshow-start"></div>');
     searchItems.append(`
             <img class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png">
@@ -6025,16 +6092,16 @@ class HomePage {
     $('#search-results').append(searchItems);
     let resultRow;
 
-    for (let ct = 0; ct < results.length; ct++) {
-      let result = results[ct];
+    for (let ct = 0; ct < jsonSearchResult.items.length; ct++) {
+      let result = jsonSearchResult.items[ct];
 
-      if (ct === 0 || ct % 3 == 0 || ct === results.length) {
+      if (ct === 0 || ct % 3 == 0 || ct === jsonSearchResult.items.length) {
         resultRow = $('<div class="row image-search-row"></div>');
         $('#search-results').append(resultRow);
       }
 
       let imageLinkContainer = $('<div class="col-4 text-center"></div>');
-      let image = $(`<img id="slideshow-image" class="image-search-item" />`).prop('src', `${ApiBase}unauthenticated/cache-everything/image?path=${result.s3Path}&thumbnail=thumbnail`);
+      let image = $(`<img id="slideshow-image" class="image-search-item" />`).prop('src', `${_api.default.getApiBase()}unauthenticated/cache-everything/image?path=${result.s3Path}&thumbnail=thumbnail`);
       let imageWrapper = $('<div class="image-search-item-image-wrapper"></div>');
       imageWrapper.append(image);
       let imageUrl = `/gallery.html?source=${encodeURIComponent(result.source)}&pageId=${encodeURIComponent(result.pageId)}`;
@@ -6053,43 +6120,11 @@ class HomePage {
     }
 
     $('#slideshow-start').click(function () {
-      localStorage.setItem("slideshowData", JSON.stringify(results));
+      localStorage.setItem("slideshowData", JSON.stringify(jsonSearchResult));
       localStorage.setItem("slideshowIndex", 0);
       window.location = "/gallery.html";
     });
     $('#image-search')[0].scrollIntoView();
-  }
-
-  assertSuccess(response, json) {
-    if (!response || response.status < 200 || response.status > 299) {
-      console.log(response);
-      console.log(json);
-      alert('Failed to get data: ' + JSON.stringify(json, 0, 4));
-      return false;
-    }
-
-    return true;
-  }
-
-  async loadSearchResultsFromUrl(url) {
-    $('#search-results').empty();
-    $('.loader-group').removeClass('hide');
-
-    try {
-      let response = await fetch(url, {
-        credentials: "same-origin"
-      });
-      let json = await response.json();
-
-      if (this.assertSuccess(response, json)) {
-        this.loadSearchResults(json);
-      }
-    } catch (error) {
-      console.log('Failed to get data:');
-      console.log(error);
-    } finally {
-      $('.loader-group').addClass('hide');
-    }
   }
 
   getSiteOptions() {
@@ -6110,53 +6145,68 @@ class HomePage {
     const onLoadSearchText = _url.default.getUrlParameter('search');
 
     let searchText = onLoadSearchText || defaultSearchText;
-    $('input[name=search-type]').change(function () {
-      $('#siteSelection').empty();
-      let selectedType = $('input[name=search-type]:checked').val();
-
-      if (selectedType === 'search-by-text') {
-        $('#siteSelection').append(`<option value="">All</option>`);
-        $('#siteSelection').append(self.getSiteOptions());
-        $('.last-id-input-group').hide();
-        $('.search-text-input-group').show();
-        $('#search-text').val(searchText);
-      } else if (selectedType === 'view-from-last-id') {
-        $('#siteSelection').append(self.getSiteOptions());
-        $('.last-id-input-group').show();
-        $('.search-text-input-group').hide();
-        $('#search-last-id').val('0');
-      }
-    });
-    $('#run-search').click(function () {
-      let selectedType = $('input[name=search-type]:checked').val();
-      let url;
-
-      if (selectedType === 'search-by-text') {
-        url = `${ApiBase}unauthenticated/search` + `?maxResults=${encodeURIComponent($('#max-results').val())}` + `&searchText=${encodeURIComponent($('#search-text').val())}` + `&source=${encodeURIComponent($('#siteSelection').val())}` + `&hideNudity=${encodeURIComponent($('#hide-nudity').is(':checked'))}` + `&searchFrom=${encodeURIComponent('0')}`; // WARNING UPDATE THIS TO USE PAGINATION
-      } else if (selectedType === 'view-from-last-id') {
-        url = `${ApiBase}unauthenticated/scan` + `?maxResults=${encodeURIComponent($('#max-results').val())}` + `&lastPageId=${encodeURIComponent($('#search-last-id').val())}` + `&source=${encodeURIComponent($('#siteSelection').val())}` + `&hideNudity=${encodeURIComponent($('#hide-nudity').is(':checked'))}`;
-      }
-
-      self.loadSearchResultsFromUrl(url);
-    });
+    $('#siteSelection').append(`<option value="">All</option>`);
+    $('#siteSelection').append(self.getSiteOptions());
+    $('.last-id-input-group').hide();
+    $('.search-text-input-group').show();
+    $('#search-text').val(searchText);
+    $('#run-search').click(this.runSearch.bind(this));
     $('.view-more-works-by-featured-artist').click(function () {
       $('#exact-artist').prop('checked', true);
       $('#search-text').val('Sir Lawrence Alma-Tadema');
       $('#max-results').val(0);
       $('#run-search').click();
     });
-    $('input[name=search-type]').change();
 
     if (onLoadSearchText) {
       $('#run-search').click();
     }
   }
 
+  async runSearch() {
+    let self = this;
+    $('#pagination').empty();
+    $('#search-results').empty();
+
+    let url = _api.default.getSearchUrl($('#max-results').val(), $('#search-text').val(), $('#siteSelection').val(), $('#hide-nudity').is(':checked'), this.searchFrom);
+
+    let json = await _api.default.get(url);
+    let pagination = $(`<div class='art-pagination'></div>`);
+    let summary = $('<div class="search-results-summary"></div>');
+    summary.text(`Showing ${json.searchFrom + 1} to ${json.searchFrom + json.items.length} of ${json.total}${json.maxSearchResultsHit ? '+' : ''} works of art`);
+    let previousButton = $(`<input id="previous-page" type="button" value="< Previous" class="btn btn-primary"/>`);
+
+    if (this.searchFrom === 0) {
+      previousButton.prop('disabled', true);
+    }
+
+    previousButton.click(function () {
+      self.searchFrom -= json.items.length;
+      self.runSearch();
+    });
+    let nextButton = $(`<input id="next-page" type="button" value="Next >" class="btn btn-primary"/>`);
+    nextButton.click(function () {
+      self.searchFrom += json.items.length;
+      self.runSearch();
+    });
+
+    if (json.searchFrom + json.items.length >= json.total) {
+      nextButton.prop('disabled', true);
+    }
+
+    pagination.append(summary);
+    pagination.append(previousButton);
+    pagination.append(nextButton);
+    $('#search-results').append(pagination);
+    this.loadSearchResults(json);
+    $('#search-results').append(pagination.clone(true));
+  }
+
 }
 
 exports.default = HomePage;
 
-},{"./url":8}],6:[function(require,module,exports){
+},{"./api":2,"./url":9}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6194,7 +6244,7 @@ class Navigation {
 
 exports.default = Navigation;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6219,7 +6269,7 @@ class SlideShowSettingsForm {
 
 exports.default = SlideShowSettingsForm;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6247,4 +6297,4 @@ class Url {
 
 exports.default = Url;
 
-},{}]},{},[2]);
+},{}]},{},[3]);

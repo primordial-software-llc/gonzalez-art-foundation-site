@@ -8,11 +8,6 @@ body .form-control {
     padding: .375rem .75rem;
 }
 
-body .btn {
-    vertical-align: baseline;
-    margin-left: 5px;
-}
-
 #slideshow-start {
     cursor: pointer;
     margin-top: 5px;
@@ -165,4 +160,8 @@ a.nav-link:hover {
 .tooltip-question-mark {
     height: 15px;
     margin-bottom: 5px;
+}
+
+.art-pagination .btn:not(.btn:first-of-type) {
+    margin-left: 5px;
 }

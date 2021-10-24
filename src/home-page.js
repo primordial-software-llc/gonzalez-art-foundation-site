@@ -1,19 +1,14 @@
-﻿const ApiBase = 'https://api.gonzalez-art-foundation.org/';
+﻿import Api from './api';
 import Url from './url';
 
 export default class HomePage {
 
-    loadSearchResults(searchResult) {
-        let summary = $('<div id="search-results-summary"></div>')
-        let results = searchResult.items || searchResult;
-        if (searchResult.items) {
-            summary.text(`Showing ${searchResult.searchFrom+1} to ${searchResult.searchFrom+searchResult.items.length} of ${searchResult.total}${searchResult.maxSearchResultsHit ? '+' : ''} works of art`);
-        } else {
-            summary.text(`Showing ${results.length} works of art`);
-        }
+    constructor() {
+        this.searchFrom = 0;
+    }
 
-        $('#search-results').append(summary);
-
+    loadSearchResults(jsonSearchResult) {
+        let self = this;
         let searchItems = $('<div id="slideshow-start"></div>');
         searchItems.append(`
             <img class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png">
@@ -21,16 +16,16 @@ export default class HomePage {
         `);
         $('#search-results').append(searchItems);
         let resultRow;
-        for (let ct = 0; ct < results.length; ct++) {
-            let result = results[ct];
-            if (ct === 0 || ct % 3 == 0 || ct === results.length) {
+        for (let ct = 0; ct < jsonSearchResult.items.length; ct++) {
+            let result = jsonSearchResult.items[ct];
+            if (ct === 0 || ct % 3 == 0 || ct === jsonSearchResult.items.length) {
                 resultRow = $('<div class="row image-search-row"></div>');
                 $('#search-results').append(resultRow);
             }
             let imageLinkContainer = $('<div class="col-4 text-center"></div>');
 
             let image = $(`<img id="slideshow-image" class="image-search-item" />`)
-                .prop('src', `${ApiBase}unauthenticated/cache-everything/image?path=${result.s3Path}&thumbnail=thumbnail`);
+                .prop('src', `${Api.getApiBase()}unauthenticated/cache-everything/image?path=${result.s3Path}&thumbnail=thumbnail`);
             let imageWrapper = $('<div class="image-search-item-image-wrapper"></div>');
             imageWrapper.append(image);
 
@@ -54,39 +49,12 @@ export default class HomePage {
         }
 
         $('#slideshow-start').click(function () {
-            localStorage.setItem("slideshowData", JSON.stringify(results));
+            localStorage.setItem("slideshowData", JSON.stringify(jsonSearchResult));
             localStorage.setItem("slideshowIndex", 0);
             window.location = "/gallery.html";
         });
 
         $('#image-search')[0].scrollIntoView();
-    }
-
-    assertSuccess(response, json) {
-        if (!response || response.status < 200 || response.status > 299) {
-            console.log(response);
-            console.log(json);
-            alert('Failed to get data: ' + JSON.stringify(json, 0, 4));
-            return false;
-        }
-        return true;
-    }
-
-    async loadSearchResultsFromUrl(url) {
-        $('#search-results').empty();
-        $('.loader-group').removeClass('hide');
-        try {
-            let response = await fetch(url, { credentials: "same-origin" });
-            let json = await response.json();
-            if (this.assertSuccess(response, json)) {
-                this.loadSearchResults(json);
-            }
-        } catch (error) {
-            console.log('Failed to get data:');
-            console.log(error);
-        } finally {
-            $('.loader-group').addClass('hide');
-        }
     }
 
     getSiteOptions() {
@@ -105,41 +73,13 @@ export default class HomePage {
         const defaultSearchText = 'Sir Lawrence Alma-Tadema';
         const onLoadSearchText = Url.getUrlParameter('search');
         let searchText = onLoadSearchText || defaultSearchText;
-        $('input[name=search-type]').change(function () {
-            $('#siteSelection').empty();
-            let selectedType = $('input[name=search-type]:checked').val();
-            if (selectedType === 'search-by-text') {
-                $('#siteSelection').append(`<option value="">All</option>`);
-                $('#siteSelection').append(self.getSiteOptions());
-                $('.last-id-input-group').hide();
-                $('.search-text-input-group').show();
-                $('#search-text').val(searchText);
-            } else if (selectedType === 'view-from-last-id') {
-                $('#siteSelection').append(self.getSiteOptions());
-                $('.last-id-input-group').show();
-                $('.search-text-input-group').hide();
-                $('#search-last-id').val('0');
-            }
-        });
-        $('#run-search').click(function () {
-            let selectedType = $('input[name=search-type]:checked').val();
-            let url;
-            if (selectedType === 'search-by-text') {
-                url = `${ApiBase}unauthenticated/search` +
-                    `?maxResults=${encodeURIComponent($('#max-results').val())}` +
-                    `&searchText=${encodeURIComponent($('#search-text').val())}` +
-                    `&source=${encodeURIComponent($('#siteSelection').val())}` +
-                    `&hideNudity=${encodeURIComponent($('#hide-nudity').is(':checked'))}` +
-                    `&searchFrom=${encodeURIComponent('0')}`; // WARNING UPDATE THIS TO USE PAGINATION
-            } else if (selectedType === 'view-from-last-id') {
-                url = `${ApiBase}unauthenticated/scan` +
-                    `?maxResults=${encodeURIComponent($('#max-results').val())}` +
-                    `&lastPageId=${encodeURIComponent($('#search-last-id').val())}` +
-                    `&source=${encodeURIComponent($('#siteSelection').val())}` +
-                    `&hideNudity=${encodeURIComponent($('#hide-nudity').is(':checked'))}`;
-            }
-            self.loadSearchResultsFromUrl(url);
-        });
+        $('#siteSelection').append(`<option value="">All</option>`);
+        $('#siteSelection').append(self.getSiteOptions());
+        $('.last-id-input-group').hide();
+        $('.search-text-input-group').show();
+        $('#search-text').val(searchText);
+
+        $('#run-search').click(this.runSearch.bind(this));
 
         $('.view-more-works-by-featured-artist').click(function () {
             $('#exact-artist').prop('checked', true);
@@ -148,9 +88,52 @@ export default class HomePage {
             $('#run-search').click();
         });
 
-        $('input[name=search-type]').change();
         if (onLoadSearchText) {
             $('#run-search').click();
         }
+    }
+
+    async runSearch() {
+        let self = this;
+        $('#pagination').empty();
+        $('#search-results').empty();
+
+        let url = Api.getSearchUrl(
+            $('#max-results').val(),
+            $('#search-text').val(),
+            $('#siteSelection').val(),
+            $('#hide-nudity').is(':checked'),
+            this.searchFrom
+        );
+
+        let json = await Api.get(url);
+
+        let pagination = $(`<div class='art-pagination'></div>`);
+        let summary = $('<div class="search-results-summary"></div>')
+
+        summary.text(`Showing ${json.searchFrom+1} to ${json.searchFrom+json.items.length} of ${json.total}${json.maxSearchResultsHit ? '+' : ''} works of art`);
+        let previousButton = $(`<input id="previous-page" type="button" value="< Previous" class="btn btn-primary"/>`);
+        if (this.searchFrom === 0) {
+            previousButton.prop('disabled', true);
+        }
+        previousButton.click(function () {
+            self.searchFrom -= json.items.length;
+            self.runSearch();
+        });
+        let nextButton = $(`<input id="next-page" type="button" value="Next >" class="btn btn-primary"/>`);
+        nextButton.click(function () {
+            self.searchFrom += json.items.length;
+            self.runSearch();
+        });
+        if (json.searchFrom+json.items.length >= json.total) {
+            nextButton.prop('disabled', true);
+        }
+        pagination.append(summary);
+        pagination.append(previousButton);
+        pagination.append(nextButton);
+
+        $('#search-results').append(pagination);
+        this.loadSearchResults(json);
+        $('#search-results').append(pagination.clone(true));
     }
 }

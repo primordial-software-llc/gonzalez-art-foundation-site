@@ -1,4 +1,6 @@
-﻿const ApiBase = 'https://api.gonzalez-art-foundation.org/';
+﻿import Api from "./api";
+
+const ApiBase = 'https://api.gonzalez-art-foundation.org/';
 const ImageBase = 'https://images.gonzalez-art-foundation.org/';
 import Url from './url';
 import SlideShowSettingsForm from './slideshow-settings-form';
@@ -20,16 +22,19 @@ export default class Gallery {
     }
 
     showCurrentImage() {
-        let slideshowItems = JSON.parse(localStorage.getItem('slideshowData'));
+        let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
         let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex"));
         if (isNaN(slideshowIndex)) {
             alert('No images selected. Use the search on the home page to queue images for viewing.');
             location.href = 'https://www.gonzalez-art-foundation.org';
             return;
         }
-        let currentImage = slideshowItems[slideshowIndex];
-        $('#slideshow-index').html(slideshowIndex + 1);
-        $('#slideshow-count').html(slideshowItems.length);
+        let currentImage = jsonSearchResult.items[slideshowIndex];
+
+        $('#slideshow-index').html(jsonSearchResult.searchFrom + slideshowIndex + 1);
+
+        let totalItems = `${jsonSearchResult.total}${jsonSearchResult.maxSearchResultsHit ? '+' : ''}`;
+        $('#slideshow-count').html(totalItems);
         this.showImage(currentImage);
     }
 
@@ -52,8 +57,6 @@ export default class Gallery {
         } else if (currentImage.source === 'http://www.the-athenaeum.org') {
             linkText = "The Athenaeum";
             link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
-        } else if (currentImage.source === 'https://www.christies.com') {
-            linkText = "Christie's"
         }
         $('#slideshow-image-info').empty();
         if (currentImage.name) {
@@ -77,15 +80,45 @@ export default class Gallery {
         }
     }
 
-    previousImage() {
+    async previousImage() {
         let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
-        localStorage.setItem("slideshowIndex", slideshowIndex - 1);
+        if (slideshowIndex <= 0) {
+            let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
+            let url = Api.getSearchUrl(
+                jsonSearchResult.maxResults,
+                jsonSearchResult.searchText,
+                jsonSearchResult.source,
+                jsonSearchResult.hideNudity,
+                jsonSearchResult.searchFrom - jsonSearchResult.maxResults
+            );
+            let newJsonSearchResult = await Api.get(url);
+            localStorage.setItem("slideshowData", JSON.stringify(newJsonSearchResult));
+            localStorage.setItem("slideshowIndex", 0);
+
+        } else {
+            localStorage.setItem("slideshowIndex", slideshowIndex - 1);
+        }
+
         this.showCurrentImage();
     }
 
-    nextImage() {
+    async nextImage() {
         let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
-        localStorage.setItem("slideshowIndex", slideshowIndex + 1);
+        let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
+        if (slideshowIndex+2 > jsonSearchResult.items.length) {
+            let url = Api.getSearchUrl(
+                jsonSearchResult.maxResults,
+                jsonSearchResult.searchText,
+                jsonSearchResult.source,
+                jsonSearchResult.hideNudity,
+                jsonSearchResult.searchFrom + jsonSearchResult.maxResults
+            );
+            let newJsonSearchResult = await Api.get(url);
+            localStorage.setItem("slideshowData", JSON.stringify(newJsonSearchResult));
+            localStorage.setItem("slideshowIndex", 0);
+        } else {
+            localStorage.setItem("slideshowIndex", slideshowIndex + 1);
+        }
         this.showCurrentImage();
     }
 
