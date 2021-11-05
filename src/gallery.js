@@ -57,6 +57,8 @@ export default class Gallery {
         } else if (currentImage.source === 'http://www.the-athenaeum.org') {
             linkText = "The Athenaeum";
             link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
+        } else if (currentImage.source === 'https://www.rijksmuseum.nl') {
+            linkText = 'Rijksmuseum in Amsterdam, Netherlands';
         }
         $('#slideshow-image-info').empty();
         if (currentImage.name) {

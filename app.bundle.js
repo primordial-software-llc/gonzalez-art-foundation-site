@@ -5872,6 +5872,8 @@ class Gallery {
     } else if (currentImage.source === 'http://www.the-athenaeum.org') {
       linkText = "The Athenaeum";
       link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
+    } else if (currentImage.source === 'https://www.rijksmuseum.nl') {
+      linkText = 'Rijksmuseum in Amsterdam, Netherlands';
     }
 
     $('#slideshow-image-info').empty();
@@ -6135,7 +6137,8 @@ class HomePage {
             <option value="http://images.nga.gov">National Gallery of Art in Washington D.C., United States</option>
             <option value="http://www.musee-orsay.fr">Musée d'Orsay in Paris, France</option>
             <option value="https://www.pop.culture.gouv.fr/notice/museo/M5031">Musée du Louvre in Paris, France</option>
-            <option value="https://www.pop.culture.gouv.fr">Ministère de la Culture in France</option>`;
+            <option value="https://www.pop.culture.gouv.fr">Ministère de la Culture in France</option>
+            <option value="https://www.rijksmuseum.nl">Rijksmuseum in Amsterdam, Netherlands</option>`;
   }
 
   init() {

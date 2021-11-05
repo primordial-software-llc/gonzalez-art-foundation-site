@@ -65,7 +65,8 @@ export default class HomePage {
             <option value="http://images.nga.gov">National Gallery of Art in Washington D.C., United States</option>
             <option value="http://www.musee-orsay.fr">Musée d'Orsay in Paris, France</option>
             <option value="https://www.pop.culture.gouv.fr/notice/museo/M5031">Musée du Louvre in Paris, France</option>
-            <option value="https://www.pop.culture.gouv.fr">Ministère de la Culture in France</option>`;
+            <option value="https://www.pop.culture.gouv.fr">Ministère de la Culture in France</option>
+            <option value="https://www.rijksmuseum.nl">Rijksmuseum in Amsterdam, Netherlands</option>`;
     }
 
     init() {
