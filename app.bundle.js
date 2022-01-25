@@ -6235,9 +6235,6 @@ class Navigation {
                     <li class="nav-item">
                         <a class="nav-link" href="about.html">About</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="legal.html">Legal</a>
-                    </li>
                 </ul>
             </nav>
         </div>`;
