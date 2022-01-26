@@ -1,9 +1,5 @@
 ﻿import Api from "./api";
-
-const ApiBase = 'https://api.gonzalez-art-foundation.org/';
-const ImageBase = 'https://images.gonzalez-art-foundation.org/';
 import Url from './url';
-import SlideShowSettingsForm from './slideshow-settings-form';
 import moment from 'moment';
 export default class Gallery {
 
@@ -25,27 +21,24 @@ export default class Gallery {
         let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
         let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex"));
         if (isNaN(slideshowIndex)) {
-            alert('No images selected. Use the search on the home page to queue images for viewing.');
             location.href = 'https://www.gonzalez-art-foundation.org';
             return;
         }
-        let currentImage = jsonSearchResult.items[slideshowIndex];
-
+        let currentImage = jsonSearchResult.items[slideshowIndex]['_source'];
         $('#slideshow-index').html(jsonSearchResult.searchFrom + slideshowIndex + 1);
-
         let totalItems = `${jsonSearchResult.total}${jsonSearchResult.maxSearchResultsHit ? '+' : ''}`;
         $('#slideshow-count').html(totalItems);
         this.showImage(currentImage);
     }
 
     showImage(currentImage) {
-        $('#slideshow-image').prop('src', `${ImageBase}${currentImage.s3Path}`);
+        $('#slideshow-image').prop('src', `${Api.getImageBase()}${currentImage.s3Path}`);
 
         let link = (currentImage.sourceLink || '').replace('http://', 'https://');
         let linkText;
 
         if (currentImage.source === 'http://images.nga.gov') {
-            linkText = 'National Gallery of Art, Washington';
+            linkText = 'National Gallery of Art, Washington DC';
         } else if (currentImage.source === 'http://www.musee-orsay.fr') {
             linkText = 'Musée d\'Orsay in Paris, France';
         } else if (currentImage.source === 'https://www.pop.culture.gouv.fr/notice/museo/M5031') {
@@ -184,7 +177,7 @@ export default class Gallery {
             $('#slideshow-controls').addClass('hide');
             $('#slideshow-image-container').addClass('single-image-mode');
             fetch(
-                `${ApiBase}unauthenticated/cache-everything/image-classification?source=${encodeURIComponent(source)}&pageId=${encodeURIComponent(pageId)}`,
+                `${Api.getApiBase()}unauthenticated/cache-everything/image-classification?source=${encodeURIComponent(source)}&pageId=${encodeURIComponent(pageId)}`,
                 { mode: 'cors' }).then(function (response) {
                 response
                     .json()

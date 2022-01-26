@@ -46,7 +46,29 @@
             <div class="input-form form-group row">
                 <input id="run-search" type="button" value="Search" class="btn btn-primary"/>
             </div>
-            <div id="search-results"></div>
+            <div id="search-results">
+                <div id="search-result-controls-top">
+                    <input type="button" value="View More" class="btn btn-primary view-more"/>
+                    <div class="search-results-summary">
+                        Showing <span class="current-matches"></span> of <span class="total-matches"></span> matching works of art
+                    </div>
+                    <div class="slideshow-start">
+                        <img alt="Start Slideshow" class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png" />
+                        <span class="slideshow-start-text">Start Slideshow</span>
+                    </div>
+                </div>
+                <div id="search-result-items"></div>
+                <div id="search-result-controls-bottom">
+                    <div class="search-results-summary">
+                        Showing <span class="current-matches"></span> of <span class="total-matches"></span> matching works of art
+                    </div>
+                    <div class="slideshow-start">
+                        <img alt="Start Slideshow" class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png" />
+                        <span class="slideshow-start-text">Start Slideshow</span>
+                    </div>
+                    <input type="button" value="View More >" class="btn btn-primary view-more"/>
+                </div>
+            </div>
         </div>
         <hr />
         <footer>

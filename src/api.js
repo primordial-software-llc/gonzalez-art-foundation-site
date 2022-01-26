@@ -1,18 +1,23 @@
 const ApiBase = 'https://api.gonzalez-art-foundation.org/';
+const ImageBase = 'https://images.gonzalez-art-foundation.org/';
 
 export default class Api {
+
+    static getImageBase() {
+        return ImageBase;
+    }
 
     static getApiBase() {
         return ApiBase;
     }
 
-    static getSearchUrl(maxResults, searchText, source, hideNudity, searchFrom) {
+    static getSearchUrl(maxResults, searchText, source, hideNudity, searchAfter) {
         return `${ApiBase}unauthenticated/search` +
             `?maxResults=${encodeURIComponent(maxResults)}` +
             `&searchText=${encodeURIComponent(searchText)}` +
             `&source=${encodeURIComponent(source)}` +
             `&hideNudity=${encodeURIComponent(hideNudity)}` +
-            `&searchFrom=${encodeURIComponent(searchFrom)}`;
+            `&searchAfter=${ searchAfter ? encodeURIComponent(searchAfter) : ''}`;
     }
 
     static assertSuccess(response, json) {

@@ -8,12 +8,11 @@ body .form-control {
     padding: .375rem .75rem;
 }
 
-#slideshow-start {
+.slideshow-start {
     cursor: pointer;
     margin-top: 5px;
     margin-bottom: 10px;
     font-size: 20px;
-    display: inline-block;
 }
 
 .slideshow-start-image {

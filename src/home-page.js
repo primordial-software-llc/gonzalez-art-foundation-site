@@ -4,28 +4,21 @@ import Url from './url';
 export default class HomePage {
 
     constructor() {
-        this.searchFrom = 0;
+        this.results = [];
     }
 
     loadSearchResults(jsonSearchResult) {
-        let self = this;
-        let searchItems = $('<div id="slideshow-start"></div>');
-        searchItems.append(`
-            <img class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png">
-            <span class="slideshow-start-text">Start Slideshow</span>
-        `);
-        $('#search-results').append(searchItems);
         let resultRow;
         for (let ct = 0; ct < jsonSearchResult.items.length; ct++) {
-            let result = jsonSearchResult.items[ct];
+            let result = jsonSearchResult.items[ct]['_source'];
+            this.results.push(jsonSearchResult.items[ct]);
             if (ct === 0 || ct % 3 == 0 || ct === jsonSearchResult.items.length) {
                 resultRow = $('<div class="row image-search-row"></div>');
-                $('#search-results').append(resultRow);
+                $('#search-result-items').append(resultRow);
             }
             let imageLinkContainer = $('<div class="col-4 text-center"></div>');
-
             let image = $(`<img id="slideshow-image" class="image-search-item" />`)
-                .prop('src', `${Api.getApiBase()}unauthenticated/cache-everything/image?path=${result.s3Path}&thumbnail=thumbnail`);
+                .prop('src', `${Api.getImageBase()}${result.s3Path}`);
             let imageWrapper = $('<div class="image-search-item-image-wrapper"></div>');
             imageWrapper.append(image);
 
@@ -48,13 +41,15 @@ export default class HomePage {
             resultRow.append(imageLinkContainer);
         }
 
-        $('#slideshow-start').click(function () {
+        $('.current-matches').text(this.results.length);
+        $('.total-matches').text(jsonSearchResult.total);
+
+        $('.slideshow-start').unbind();
+        $('.slideshow-start').click(function () {
             localStorage.setItem("slideshowData", JSON.stringify(jsonSearchResult));
             localStorage.setItem("slideshowIndex", 0);
             window.location = "/gallery.html";
         });
-
-        $('#image-search')[0].scrollIntoView();
     }
 
     getSiteOptions() {
@@ -81,6 +76,18 @@ export default class HomePage {
         $('#search-text').val(searchText);
 
         $('#run-search').click(this.runSearch.bind(this));
+        $('.view-more').click(async function () {
+            let lastResult = self.results[self.results.length-1];
+            let moreUrl = Api.getSearchUrl(
+                $('#max-results').val(),
+                $('#search-text').val(),
+                $('#siteSelection').val(),
+                $('#hide-nudity').is(':checked'),
+                JSON.stringify(lastResult.sort)
+            );
+            let moreJson = await Api.get(moreUrl);
+            self.loadSearchResults(moreJson);
+        });
 
         $('.view-more-works-by-featured-artist').click(function () {
             $('#exact-artist').prop('checked', true);
@@ -95,46 +102,17 @@ export default class HomePage {
     }
 
     async runSearch() {
+        $('#search-result-items').empty();
+        this.results = [];
         let self = this;
-        $('#pagination').empty();
-        $('#search-results').empty();
-
         let url = Api.getSearchUrl(
             $('#max-results').val(),
             $('#search-text').val(),
             $('#siteSelection').val(),
             $('#hide-nudity').is(':checked'),
-            this.searchFrom
+            JSON.stringify(self.searchAfter)
         );
-
         let json = await Api.get(url);
-
-        let pagination = $(`<div class='art-pagination'></div>`);
-        let summary = $('<div class="search-results-summary"></div>')
-
-        summary.text(`Showing ${json.searchFrom+1} to ${json.searchFrom+json.items.length} of ${json.total}${json.maxSearchResultsHit ? '+' : ''} works of art`);
-        let previousButton = $(`<input id="previous-page" type="button" value="< Previous" class="btn btn-primary"/>`);
-        if (this.searchFrom === 0) {
-            previousButton.prop('disabled', true);
-        }
-        previousButton.click(function () {
-            self.searchFrom -= json.items.length;
-            self.runSearch();
-        });
-        let nextButton = $(`<input id="next-page" type="button" value="Next >" class="btn btn-primary"/>`);
-        nextButton.click(function () {
-            self.searchFrom += json.items.length;
-            self.runSearch();
-        });
-        if (json.searchFrom+json.items.length >= json.total) {
-            nextButton.prop('disabled', true);
-        }
-        pagination.append(summary);
-        pagination.append(previousButton);
-        pagination.append(nextButton);
-
-        $('#search-results').append(pagination);
         this.loadSearchResults(json);
-        $('#search-results').append(pagination.clone(true));
     }
 }
