@@ -11,12 +11,11 @@ export default class Api {
         return ApiBase;
     }
 
-    static getSearchUrl(maxResults, searchText, source, hideNudity, searchAfter) {
+    static getSearchUrl(maxResults, searchText, source, searchAfter) {
         return `${ApiBase}unauthenticated/search` +
             `?maxResults=${encodeURIComponent(maxResults)}` +
             `&searchText=${encodeURIComponent(searchText)}` +
             `&source=${encodeURIComponent(source)}` +
-            `&hideNudity=${encodeURIComponent(hideNudity)}` +
             `&searchAfter=${ searchAfter ? encodeURIComponent(searchAfter) : ''}`;
     }
 

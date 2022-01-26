@@ -75,38 +75,16 @@ export default class Gallery {
         }
     }
 
-    async previousImage() {
-        let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
-        if (slideshowIndex <= 0) {
-            let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
-            let url = Api.getSearchUrl(
-                jsonSearchResult.maxResults,
-                jsonSearchResult.searchText,
-                jsonSearchResult.source,
-                jsonSearchResult.hideNudity,
-                jsonSearchResult.searchFrom - jsonSearchResult.maxResults
-            );
-            let newJsonSearchResult = await Api.get(url);
-            localStorage.setItem("slideshowData", JSON.stringify(newJsonSearchResult));
-            localStorage.setItem("slideshowIndex", 0);
-
-        } else {
-            localStorage.setItem("slideshowIndex", slideshowIndex - 1);
-        }
-
-        this.showCurrentImage();
-    }
-
     async nextImage() {
         let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
         let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
         if (slideshowIndex+2 > jsonSearchResult.items.length) {
+            let lastResult = jsonSearchResult.items[jsonSearchResult.items.length-1];
             let url = Api.getSearchUrl(
                 jsonSearchResult.maxResults,
                 jsonSearchResult.searchText,
                 jsonSearchResult.source,
-                jsonSearchResult.hideNudity,
-                jsonSearchResult.searchFrom + jsonSearchResult.maxResults
+                JSON.stringify(lastResult.sort)
             );
             let newJsonSearchResult = await Api.get(url);
             localStorage.setItem("slideshowData", JSON.stringify(newJsonSearchResult));
@@ -214,14 +192,6 @@ export default class Gallery {
         setInterval(function () {
             self.tryHidePlayer();
         }, 15000);
-        $('#slideshow-previous').click(function () {
-            self.previousImage();
-            self.pauseSlideshow();
-        });
-        $('#slideshow-next').click(function () {
-            self.nextImage();
-            self.pauseSlideshow();
-        });
         let defaultInterval = 6;
         $('#slideshow-interval').val(defaultInterval);
         $('#slideshow-pause')

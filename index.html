@@ -36,19 +36,11 @@
                 <label for="max-results" class="col-sm-2 col-form-label">Max Results:</label>
                 <input id="max-results" type="text" class="col-sm-10 form-control" value="100" />
             </div>
-            <div class="input-form form-group row" data-toggle="tooltip" title="Make a best effort to hide nudity and suggestive sexual content">
-                <label for="hide-nudity" class="col-sm-2 col-form-label">Hide Nudity:</label>
-                <div class="col-sm-10">
-                    <input id="hide-nudity" type="checkbox" checked="checked">
-                    <img class="tooltip-question-mark" src="images/Glyphicons/glyphicons-195-question-sign.png" />
-                </div>
-            </div>
             <div class="input-form form-group row">
                 <input id="run-search" type="button" value="Search" class="btn btn-primary"/>
             </div>
             <div id="search-results">
-                <div id="search-result-controls-top">
-                    <input type="button" value="View More" class="btn btn-primary view-more"/>
+                <div class="search-result-controls hide">
                     <div class="search-results-summary">
                         Showing <span class="current-matches"></span> of <span class="total-matches"></span> matching works of art
                     </div>
@@ -58,7 +50,7 @@
                     </div>
                 </div>
                 <div id="search-result-items"></div>
-                <div id="search-result-controls-bottom">
+                <div class="search-result-controls hide">
                     <div class="search-results-summary">
                         Showing <span class="current-matches"></span> of <span class="total-matches"></span> matching works of art
                     </div>

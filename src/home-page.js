@@ -82,7 +82,6 @@ export default class HomePage {
                 $('#max-results').val(),
                 $('#search-text').val(),
                 $('#siteSelection').val(),
-                $('#hide-nudity').is(':checked'),
                 JSON.stringify(lastResult.sort)
             );
             let moreJson = await Api.get(moreUrl);
@@ -109,9 +108,9 @@ export default class HomePage {
             $('#max-results').val(),
             $('#search-text').val(),
             $('#siteSelection').val(),
-            $('#hide-nudity').is(':checked'),
             JSON.stringify(self.searchAfter)
         );
+        $('.search-result-controls').show();
         let json = await Api.get(url);
         this.loadSearchResults(json);
     }

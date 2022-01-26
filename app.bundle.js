@@ -5689,8 +5689,8 @@ class Api {
     return ApiBase;
   }
 
-  static getSearchUrl(maxResults, searchText, source, hideNudity, searchAfter) {
-    return `${ApiBase}unauthenticated/search` + `?maxResults=${encodeURIComponent(maxResults)}` + `&searchText=${encodeURIComponent(searchText)}` + `&source=${encodeURIComponent(source)}` + `&hideNudity=${encodeURIComponent(hideNudity)}` + `&searchAfter=${searchAfter ? encodeURIComponent(searchAfter) : ''}`;
+  static getSearchUrl(maxResults, searchText, source, searchAfter) {
+    return `${ApiBase}unauthenticated/search` + `?maxResults=${encodeURIComponent(maxResults)}` + `&searchText=${encodeURIComponent(searchText)}` + `&source=${encodeURIComponent(source)}` + `&searchAfter=${searchAfter ? encodeURIComponent(searchAfter) : ''}`;
   }
 
   static assertSuccess(response, json) {
@@ -5901,30 +5901,14 @@ class Gallery {
     }
   }
 
-  async previousImage() {
-    let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
-
-    if (slideshowIndex <= 0) {
-      let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
-
-      let url = _api.default.getSearchUrl(jsonSearchResult.maxResults, jsonSearchResult.searchText, jsonSearchResult.source, jsonSearchResult.hideNudity, jsonSearchResult.searchFrom - jsonSearchResult.maxResults);
-
-      let newJsonSearchResult = await _api.default.get(url);
-      localStorage.setItem("slideshowData", JSON.stringify(newJsonSearchResult));
-      localStorage.setItem("slideshowIndex", 0);
-    } else {
-      localStorage.setItem("slideshowIndex", slideshowIndex - 1);
-    }
-
-    this.showCurrentImage();
-  }
-
   async nextImage() {
     let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex", 0));
     let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
 
     if (slideshowIndex + 2 > jsonSearchResult.items.length) {
-      let url = _api.default.getSearchUrl(jsonSearchResult.maxResults, jsonSearchResult.searchText, jsonSearchResult.source, jsonSearchResult.hideNudity, jsonSearchResult.searchFrom + jsonSearchResult.maxResults);
+      let lastResult = jsonSearchResult.items[jsonSearchResult.items.length - 1];
+
+      let url = _api.default.getSearchUrl(jsonSearchResult.maxResults, jsonSearchResult.searchText, jsonSearchResult.source, JSON.stringify(lastResult.sort));
 
       let newJsonSearchResult = await _api.default.get(url);
       localStorage.setItem("slideshowData", JSON.stringify(newJsonSearchResult));
@@ -6035,14 +6019,6 @@ class Gallery {
     setInterval(function () {
       self.tryHidePlayer();
     }, 15000);
-    $('#slideshow-previous').click(function () {
-      self.previousImage();
-      self.pauseSlideshow();
-    });
-    $('#slideshow-next').click(function () {
-      self.nextImage();
-      self.pauseSlideshow();
-    });
     let defaultInterval = 6;
     $('#slideshow-interval').val(defaultInterval);
     $('#slideshow-pause').hide().click(() => {
@@ -6152,7 +6128,7 @@ class HomePage {
     $('.view-more').click(async function () {
       let lastResult = self.results[self.results.length - 1];
 
-      let moreUrl = _api.default.getSearchUrl($('#max-results').val(), $('#search-text').val(), $('#siteSelection').val(), $('#hide-nudity').is(':checked'), JSON.stringify(lastResult.sort));
+      let moreUrl = _api.default.getSearchUrl($('#max-results').val(), $('#search-text').val(), $('#siteSelection').val(), JSON.stringify(lastResult.sort));
 
       let moreJson = await _api.default.get(moreUrl);
       self.loadSearchResults(moreJson);
@@ -6174,8 +6150,9 @@ class HomePage {
     this.results = [];
     let self = this;
 
-    let url = _api.default.getSearchUrl($('#max-results').val(), $('#search-text').val(), $('#siteSelection').val(), $('#hide-nudity').is(':checked'), JSON.stringify(self.searchAfter));
+    let url = _api.default.getSearchUrl($('#max-results').val(), $('#search-text').val(), $('#siteSelection').val(), JSON.stringify(self.searchAfter));
 
+    $('.search-result-controls').show();
     let json = await _api.default.get(url);
     this.loadSearchResults(json);
   }
