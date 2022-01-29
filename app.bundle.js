@@ -6072,7 +6072,7 @@ class HomePage {
       }
 
       let imageLinkContainer = $('<div class="col-4 text-center"></div>');
-      let image = $(`<img id="slideshow-image" class="image-search-item" />`).prop('src', `${_api.default.getImageBase()}${result.s3Path}`);
+      let image = $(`<img id="slideshow-image" class="image-search-item" />`).prop('src', `${_api.default.getImageBase()}${result.s3ThumbnailPath || result.s3Path}`);
       let imageWrapper = $('<div class="image-search-item-image-wrapper"></div>');
       imageWrapper.append(image);
       let imageUrl = `/gallery.html?source=${encodeURIComponent(result.source)}&pageId=${encodeURIComponent(result.pageId)}`;
