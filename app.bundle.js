@@ -5739,13 +5739,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 $(document).ready(function () {
   let controller;
   $('#main-nav').append(_navigation.default.getNavigation());
-  var path = window.location.pathname.toLowerCase();
+  let path = window.location.pathname.toLowerCase();
 
-  if (path === '/index.html' || path === '/') {
+  if (path.endsWith('/index.html') || path === '/') {
     controller = new _homePage.default();
-  } else if (path === '/gallery.html') {
+  } else if (path.endsWith('/gallery.html')) {
     controller = new _gallery.default();
-  } else if (path === '/artists.html') {
+  } else if (path.endsWith('/artists.html')) {
     controller = new _artists.default();
   }
 
@@ -6057,6 +6057,35 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 class HomePage {
   constructor() {
     this.results = [];
+    this.slideIndex = 1;
+  }
+
+  plusSlides(n) {
+    this.showSlides(this.slideIndex += n);
+  }
+
+  currentSlide(n) {
+    this.showSlides(this.slideIndex = n);
+  }
+
+  showSlides(n) {
+    let slides = document.getElementsByClassName("slideshow-slide");
+    let captionText = document.getElementById("caption");
+
+    if (n > slides.length) {
+      this.slideIndex = 1;
+    }
+
+    if (n < 1) {
+      this.slideIndex = slides.length;
+    }
+
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+    }
+
+    slides[this.slideIndex - 1].style.display = "block";
+    captionText.innerHTML = $(slides[this.slideIndex - 1]).children('img').attr('alt') || '';
   }
 
   loadSearchResults(jsonSearchResult) {
@@ -6138,6 +6167,13 @@ class HomePage {
     if (onLoadSearchText) {
       $('#run-search').click();
     }
+
+    $('.home .slideshow-prev').click(function () {
+      self.plusSlides(-1);
+    });
+    $('.home .slideshow-next').click(function () {
+      self.plusSlides(1);
+    });
   }
 
   async runSearch() {

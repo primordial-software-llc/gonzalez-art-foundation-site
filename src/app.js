@@ -6,12 +6,12 @@ import Navigation from './navigation';
 $(document).ready(function () {
     let controller;
     $('#main-nav').append(Navigation.getNavigation());
-    var path = window.location.pathname.toLowerCase();
-    if (path === '/index.html' || path === '/') {
+    let path = window.location.pathname.toLowerCase();
+    if (path.endsWith('/index.html') || path === '/') {
         controller = new HomePage();
-    } else if (path === '/gallery.html') {
+    } else if (path.endsWith('/gallery.html')) {
         controller = new Gallery();
-    } else if (path === '/artists.html') {
+    } else if (path.endsWith('/artists.html')) {
         controller = new Artists();
     }
     if (controller) {

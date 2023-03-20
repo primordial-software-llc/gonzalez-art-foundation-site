@@ -5,6 +5,29 @@ export default class HomePage {
 
     constructor() {
         this.results = [];
+        this.slideIndex = 1;
+    }
+
+    plusSlides(n) {
+        this.showSlides(this.slideIndex += n);
+    }
+
+    currentSlide(n) {
+        this.showSlides(this.slideIndex = n);
+    }
+
+    showSlides(n) {
+        let slides = document.getElementsByClassName("slideshow-slide");
+        let captionText = document.getElementById("caption");
+        if (n > slides.length) {
+            this.slideIndex = 1
+        }
+        if (n < 1) {this.slideIndex = slides.length}
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[this.slideIndex-1].style.display = "block";
+        captionText.innerHTML = $(slides[this.slideIndex-1]).children('img').attr('alt') || '';
     }
 
     loadSearchResults(jsonSearchResult) {
@@ -93,6 +116,13 @@ export default class HomePage {
         if (onLoadSearchText) {
             $('#run-search').click();
         }
+
+        $('.home .slideshow-prev').click(function () {
+            self.plusSlides(-1);
+        });
+        $('.home .slideshow-next').click(function () {
+            self.plusSlides(1);
+        });
     }
 
     async runSearch() {
