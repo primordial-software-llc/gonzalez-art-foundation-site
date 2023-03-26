@@ -6727,28 +6727,6 @@ class HomePage {
         "sort": [38.778423, "http://www.the-athenaeum.org", "1258"]
       }, {
         "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:1260",
-        "_score": 38.778423,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "1260",
-          "artist": "sir lawrence alma-tadema",
-          "name": "Greek Potters",
-          "originalArtist": "Sir Lawrence Alma-Tadema",
-          "date": "1871",
-          "s3Bucket": "images.gonzalez-art-foundation.org",
-          "s3Path": "collections/the-athenaeum/page-id-1260.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-1260.jpg",
-          "height": 1133,
-          "width": 793,
-          "orientation": "portrait",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T11:35:32.0635646Z"
-        },
-        "sort": [38.778423, "http://www.the-athenaeum.org", "1260"]
-      }, {
-        "_index": "classification",
         "_id": "http://www.the-athenaeum.org:1261",
         "_score": 38.778423,
         "_source": {
@@ -13545,27 +13523,6 @@ class HomePage {
         "sort": [38.778423, "http://www.the-athenaeum.org", "328"]
       }, {
         "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:329",
-        "_score": 38.778423,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "329",
-          "artist": "sir lawrence alma-tadema",
-          "name": "Expectations",
-          "originalArtist": "Sir Lawrence Alma-Tadema",
-          "date": "1885",
-          "s3Path": "collections/the-athenaeum/page-id-329.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-329.jpg",
-          "height": 370,
-          "width": 750,
-          "orientation": "landscape",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T15:39:05.172579Z"
-        },
-        "sort": [38.778423, "http://www.the-athenaeum.org", "329"]
-      }, {
-        "_index": "classification",
         "_id": "http://www.the-athenaeum.org:330",
         "_score": 38.778423,
         "_source": {
@@ -13886,69 +13843,6 @@ class HomePage {
           "@timestamp": "2021-04-24T15:43:37.1344005Z"
         },
         "sort": [38.778423, "http://www.the-athenaeum.org", "353"]
-      }, {
-        "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:354",
-        "_score": 38.778423,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "354",
-          "artist": "sir lawrence alma-tadema",
-          "name": "A Reading from Homer",
-          "originalArtist": "Sir Lawrence Alma-Tadema",
-          "date": "1885",
-          "s3Path": "collections/the-athenaeum/page-id-354.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-354.jpg",
-          "height": 797,
-          "width": 1600,
-          "orientation": "landscape",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T15:38:35.1033823Z"
-        },
-        "sort": [38.778423, "http://www.the-athenaeum.org", "354"]
-      }, {
-        "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:355",
-        "_score": 38.778423,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "355",
-          "artist": "sir lawrence alma-tadema",
-          "name": "The Roses of Heliogabalus",
-          "originalArtist": "Sir Lawrence Alma-Tadema",
-          "date": "1888",
-          "s3Path": "collections/the-athenaeum/page-id-355.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-355.jpg",
-          "height": 1080,
-          "width": 1754,
-          "orientation": "landscape",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T15:48:36.1113035Z"
-        },
-        "sort": [38.778423, "http://www.the-athenaeum.org", "355"]
-      }, {
-        "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:356",
-        "_score": 38.778423,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "356",
-          "artist": "sir lawrence alma-tadema",
-          "name": "A Dedication to Bacchus",
-          "originalArtist": "Sir Lawrence Alma-Tadema",
-          "date": "1889",
-          "s3Path": "collections/the-athenaeum/page-id-356.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-356.jpg",
-          "height": 1201,
-          "width": 2629,
-          "orientation": "landscape",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T15:47:18.7961913Z"
-        },
-        "sort": [38.778423, "http://www.the-athenaeum.org", "356"]
       }, {
         "_index": "classification",
         "_id": "http://www.the-athenaeum.org:357",
@@ -14306,27 +14200,6 @@ class HomePage {
           "@timestamp": "2021-04-24T15:42:19.0298822Z"
         },
         "sort": [38.778423, "http://www.the-athenaeum.org", "374"]
-      }, {
-        "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:375",
-        "_score": 38.778423,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "375",
-          "artist": "sir lawrence alma-tadema",
-          "name": "A Pyhrric Dance",
-          "originalArtist": "Sir Lawrence Alma-Tadema",
-          "date": "1869",
-          "s3Path": "collections/the-athenaeum/page-id-375.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-375.jpg",
-          "height": 632,
-          "width": 1280,
-          "orientation": "landscape",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T15:46:23.0915846Z"
-        },
-        "sort": [38.778423, "http://www.the-athenaeum.org", "375"]
       }, {
         "_index": "classification",
         "_id": "http://www.the-athenaeum.org:376",
@@ -14807,134 +14680,6 @@ class HomePage {
           "@timestamp": "2021-04-24T16:55:31.5222472Z"
         },
         "sort": [38.778423, "http://www.the-athenaeum.org", "82698"]
-      }, {
-        "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:1335",
-        "_score": 25.502197,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "1335",
-          "artist": "anna alma-tadema",
-          "name": "The Drawing Room at Townshend House",
-          "originalArtist": "Anna Alma-Tadema",
-          "date": "1885",
-          "s3Bucket": "images.gonzalez-art-foundation.org",
-          "s3Path": "collections/the-athenaeum/page-id-1335.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-1335.jpg",
-          "height": 1120,
-          "width": 746,
-          "orientation": "portrait",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T11:48:36.7862641Z"
-        },
-        "sort": [25.502197, "http://www.the-athenaeum.org", "1335"]
-      }, {
-        "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:1339",
-        "_score": 25.502197,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "1339",
-          "artist": "anna alma-tadema",
-          "name": "Drawing Room, Holland Park",
-          "originalArtist": "Anna Alma-Tadema",
-          "date": "1887",
-          "s3Bucket": "images.gonzalez-art-foundation.org",
-          "s3Path": "collections/the-athenaeum/page-id-1339.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-1339.jpg",
-          "height": 907,
-          "width": 649,
-          "orientation": "portrait",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T11:49:09.3184241Z"
-        },
-        "sort": [25.502197, "http://www.the-athenaeum.org", "1339"]
-      }, {
-        "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:274731",
-        "_score": 25.502197,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "274731",
-          "artist": "anna alma-tadema",
-          "name": "Sir Lawrence Alma-Tadema's Study in Townshend House, London",
-          "originalArtist": "Anna Alma-Tadema",
-          "date": "1884",
-          "s3Path": "collections/the-athenaeum/page-id-274731.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-274731.jpg",
-          "height": 1024,
-          "width": 1205,
-          "orientation": "landscape",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T15:10:44.9917844Z"
-        },
-        "sort": [25.502197, "http://www.the-athenaeum.org", "274731"]
-      }, {
-        "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:274732",
-        "_score": 25.502197,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "274732",
-          "artist": "anna alma-tadema",
-          "name": "The Porter's Lodge at 17, Grove End Road",
-          "originalArtist": "Anna Alma-Tadema",
-          "date": "Date unknown",
-          "s3Path": "collections/the-athenaeum/page-id-274732.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-274732.jpg",
-          "height": 800,
-          "width": 519,
-          "orientation": "portrait",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T15:04:39.8398201Z"
-        },
-        "sort": [25.502197, "http://www.the-athenaeum.org", "274732"]
-      }, {
-        "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:274733",
-        "_score": 25.502197,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "274733",
-          "artist": "anna alma-tadema",
-          "name": "Interior of the Gold Room, Townshend House",
-          "originalArtist": "Anna Alma-Tadema",
-          "date": "circa 1883",
-          "s3Path": "collections/the-athenaeum/page-id-274733.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-274733.jpg",
-          "height": 1280,
-          "width": 864,
-          "orientation": "portrait",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T15:04:38.3117205Z"
-        },
-        "sort": [25.502197, "http://www.the-athenaeum.org", "274733"]
-      }, {
-        "_index": "classification",
-        "_id": "http://www.the-athenaeum.org:274734",
-        "_score": 25.502197,
-        "_source": {
-          "source": "http://www.the-athenaeum.org",
-          "pageId": "274734",
-          "artist": "anna alma-tadema",
-          "name": "Flags",
-          "originalArtist": "Anna Alma-Tadema",
-          "date": "Date unknown",
-          "s3Path": "collections/the-athenaeum/page-id-274734.jpg",
-          "s3ThumbnailPath": "collections/the-athenaeum/thumbnails/page-id-274734.jpg",
-          "height": 1280,
-          "width": 102,
-          "orientation": "portrait",
-          "moderationLabels": [],
-          "nudity": false,
-          "@timestamp": "2021-04-24T15:10:21.2663485Z"
-        },
-        "sort": [25.502197, "http://www.the-athenaeum.org", "274734"]
       }],
       "total": 8374,
       "source": "",
