@@ -11,12 +11,13 @@ export default class Api {
         return ApiBase;
     }
 
-    static getSearchUrl(maxResults, searchText, source, searchAfter) {
+    static getSearchUrl(maxResults, searchText, source, searchAfter, exactArtistMatch) {
         return `${ApiBase}unauthenticated/search` +
             `?maxResults=${encodeURIComponent(maxResults)}` +
             `&searchText=${encodeURIComponent(searchText)}` +
             `&source=${encodeURIComponent(source)}` +
-            `&searchAfter=${ searchAfter ? encodeURIComponent(searchAfter) : ''}`;
+            `&searchAfter=${ searchAfter ? encodeURIComponent(searchAfter) : ''}` +
+            `&exactArtistMatch=${!!exactArtistMatch}`;
     }
 
     static assertSuccess(response, json) {

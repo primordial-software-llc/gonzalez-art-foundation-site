@@ -14,7 +14,7 @@ export default class Artists {
     loadArtists(artists) {
         let artistList = $('<ul class="artist-list"></ul>');
         for (let artist of artists) {
-            artistList.append(`<li><a target="_blank" href='/index.html?search=${encodeURIComponent(artist.artist)}'>${artist.originalArtist} - ${artist.numberOfWorks} works of art</a></li>`);
+            artistList.append(`<li><a target="_blank" href='/index.html?search=${encodeURIComponent(artist.artist)}&exactArtistMatch=true'>${artist.originalArtist} - ${artist.numberOfWorks} works of art</a></li>`);
         }
         $('.artists-container')
             .empty()
