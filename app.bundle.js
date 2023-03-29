@@ -5689,8 +5689,8 @@ class Api {
     return ApiBase;
   }
 
-  static getSearchUrl(maxResults, searchText, source, searchAfter, exactArtistMatch) {
-    return `${ApiBase}unauthenticated/search` + `?maxResults=${encodeURIComponent(maxResults)}` + `&searchText=${encodeURIComponent(searchText)}` + `&source=${encodeURIComponent(source)}` + `&searchAfter=${searchAfter ? encodeURIComponent(searchAfter) : ''}` + `&exactArtistMatch=${!!exactArtistMatch}`;
+  static getSearchUrl(maxResults, searchText, source, searchAfter, artistExactMatch) {
+    return `${ApiBase}unauthenticated/search` + `?maxResults=${encodeURIComponent(maxResults)}` + `&searchText=${encodeURIComponent(searchText)}` + `&source=${encodeURIComponent(source)}` + `&searchAfter=${searchAfter ? encodeURIComponent(searchAfter) : ''}` + `&artistExactMatch=${!!artistExactMatch}`;
   }
 
   static assertSuccess(response, json) {
@@ -5788,7 +5788,7 @@ class Artists {
     let artistList = $('<ul class="artist-list"></ul>');
 
     for (let artist of artists) {
-      artistList.append(`<li><a target="_blank" href='/index.html?search=${encodeURIComponent(artist.artist)}&exactArtistMatch=true'>${artist.originalArtist} - ${artist.numberOfWorks} works of art</a></li>`);
+      artistList.append(`<li><a target="_blank" href='/index.html?search=${encodeURIComponent(artist.artist)}&artistExactMatch=true'>${artist.originalArtist} - ${artist.numberOfWorks} works of art</a></li>`);
     }
 
     $('.artists-container').empty().append(artistList);
@@ -14906,12 +14906,12 @@ class HomePage {
       self.loadSearchResults(moreJson);
     });
     $('.view-more-works-by-featured-artist').click(function () {
-      window.location.href = `/index.html?search=${encodeURIComponent('sir lawrence alma-tadema')}&exactArtistMatch=true`;
+      window.location.href = `/index.html?search=${encodeURIComponent('sir lawrence alma-tadema')}&artistExactMatch=true`;
     });
 
     if (onLoadSearchText) {
-      const exactArtistMatch = _url.default.getUrlParameter('exactArtistMatch') === 'true';
-      this.runSearch(exactArtistMatch);
+      const artistExactMatch = _url.default.getUrlParameter('artistExactMatch') === 'true';
+      this.runSearch(artistExactMatch);
     }
 
     self.showSlides(0);
@@ -14923,12 +14923,12 @@ class HomePage {
     });
   }
 
-  async runSearch(exactArtistMatch) {
+  async runSearch(artistExactMatch) {
     $('#search-result-items').empty();
     this.results = [];
     let self = this;
 
-    let url = _api.default.getSearchUrl($('#max-results').val(), $('#search-text').val(), $('#siteSelection').val(), JSON.stringify(self.searchAfter), exactArtistMatch);
+    let url = _api.default.getSearchUrl($('#max-results').val(), $('#search-text').val(), $('#siteSelection').val(), JSON.stringify(self.searchAfter), artistExactMatch);
 
     $('.search-result-controls').show();
     let json = await _api.default.get(url);

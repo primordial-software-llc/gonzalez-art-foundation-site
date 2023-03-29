@@ -144,12 +144,12 @@ export default class HomePage {
         });
 
         $('.view-more-works-by-featured-artist').click(function () {
-            window.location.href = `/index.html?search=${encodeURIComponent('sir lawrence alma-tadema')}&exactArtistMatch=true`;
+            window.location.href = `/index.html?search=${encodeURIComponent('sir lawrence alma-tadema')}&artistExactMatch=true`;
         });
 
         if (onLoadSearchText) {
-            const exactArtistMatch = Url.getUrlParameter('exactArtistMatch') === 'true';
-            this.runSearch(exactArtistMatch);
+            const artistExactMatch = Url.getUrlParameter('artistExactMatch') === 'true';
+            this.runSearch(artistExactMatch);
         }
 
         self.showSlides(0);
@@ -161,7 +161,7 @@ export default class HomePage {
         });
     }
 
-    async runSearch(exactArtistMatch) {
+    async runSearch(artistExactMatch) {
         $('#search-result-items').empty();
         this.results = [];
         let self = this;
@@ -170,7 +170,7 @@ export default class HomePage {
             $('#search-text').val(),
             $('#siteSelection').val(),
             JSON.stringify(self.searchAfter),
-            exactArtistMatch
+            artistExactMatch
         );
         $('.search-result-controls').show();
         let json = await Api.get(url);
