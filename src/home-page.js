@@ -130,7 +130,9 @@ export default class HomePage {
         $('.search-text-input-group').show();
         $('#search-text').val(searchText);
 
-        $('#run-search').click(this.runSearch.bind(this));
+        $('#run-search').click(function () {
+            this.runSearch(false);
+        });
         $('.view-more').click(async function () {
             let lastResult = self.results[self.results.length-1];
             let moreUrl = Api.getSearchUrl(
