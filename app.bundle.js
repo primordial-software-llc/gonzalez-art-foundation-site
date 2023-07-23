@@ -14897,7 +14897,7 @@ class HomePage {
     $('.search-text-input-group').show();
     $('#search-text').val(searchText);
     $('#run-search').click(function () {
-      this.runSearch(false);
+      self.runSearch(false);
     });
     $('.view-more').click(async function () {
       let lastResult = self.results[self.results.length - 1];
