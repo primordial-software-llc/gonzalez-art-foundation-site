@@ -5850,41 +5850,32 @@ class Gallery {
     const jsonLd = {
       "@context": "https://schema.org",
       "@type": "VisualArtwork",
-      "name": artwork.name || "Untitled Artwork",
+      "name": artwork.name,
       "artist": {
         "@type": "Person",
-        "name": artwork.originalArtist || "Unknown Artist"
+        "name": artwork.originalArtist
       },
-      "dateCreated": artwork.date || "",
-      "image": `${_api.default.getImageBase()}${artwork.s3Path}`
+      "dateCreated": artwork.date,
+      "image": `${_api.default.getImageBase()}${artwork.s3Path}`,
+      "url": `${window.location.protocol}//${window.location.host}${window.location.pathname}?source=${encodeURIComponent(artwork.source)}&pageId=${encodeURIComponent(artwork.pageId)}`,
+      "width": artwork.width ? `${artwork.width}px` : undefined,
+      "height": artwork.height ? `${artwork.height}px` : undefined
     };
     $('head').append(`<script id="artwork-structured-data" type="application/ld+json">${JSON.stringify(jsonLd)}</script>`);
   }
 
   updateMetaTags(artwork) {
-    // Check if we're on the gallery page by checking for meta elements
-    if ($('#meta-title').length === 0) {
-      // Not on gallery.html, so don't try to update meta tags
-      return;
-    } // Update page title
-
-
-    const title = artwork.name ? `${artwork.name}${artwork.date ? ` (${artwork.date})` : ''} - Gonzalez Art Foundation` : 'Gonzalez Art Foundation - Digital Art Gallery';
-    document.title = title; // Update meta tags
-
+    const title = `${artwork.name} (${artwork.date}) - ${artwork.originalArtist} - Gonzalez Art Foundation`;
+    document.title = title;
     $('#meta-title').attr('content', title);
-    const description = artwork.originalArtist ? `${artwork.name || 'Artwork'}${artwork.date ? ` (${artwork.date})` : ''} by ${artwork.originalArtist} - Gonzalez Art Foundation` : `View fine art from the Gonzalez Art Foundation digital collection`;
+    const description = `${artwork.name} (${artwork.date}) by ${artwork.originalArtist}. View high-resolution fine art from the Gonzalez Art Foundation collection.`;
     $('#meta-description').attr('content', description);
-    $('#meta-og-description').attr('content', description); // Set artwork-specific meta tags
-
+    $('#meta-og-description').attr('content', description);
     if (artwork.originalArtist) $('#meta-art-artist').attr('content', artwork.originalArtist);
     if (artwork.date) $('#meta-art-date').attr('content', artwork.date);
-    if (artwork.source) $('#meta-art-source').attr('content', artwork.source); // Set keywords based on available data
-
-    let keywords = ['art', 'fine art', 'digital gallery', 'Gonzalez Art Foundation'];
-    if (artwork.originalArtist) keywords.unshift(artwork.originalArtist);
-    if (artwork.name) keywords.unshift(artwork.name);
-    $('#meta-keywords').attr('content', keywords.join(', ')); // Set og:image and og:url
+    if (artwork.source) $('#meta-art-source').attr('content', artwork.source);
+    let keywords = ['art', 'fine art', 'digital gallery', 'painting', 'Gonzalez Art Foundation'];
+    $('#meta-keywords').attr('content', keywords.join(', '));
 
     if (artwork.s3Path) {
       $('#meta-og-image').attr('content', `${_api.default.getImageBase()}${artwork.s3Path}`);
@@ -5898,8 +5889,7 @@ class Gallery {
       const currentUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?source=${encodeURIComponent(source)}&pageId=${encodeURIComponent(pageId)}`;
       $('#meta-og-url').attr('content', currentUrl);
       $('#canonical-link').attr('href', currentUrl);
-    } // Add structured data for search engines
-
+    }
 
     this.addStructuredData(artwork);
   }
@@ -5927,13 +5917,6 @@ class Gallery {
 
     if (currentImage.source === 'http://images.nga.gov') {
       linkText = 'National Gallery of Art, Washington DC';
-    } else if (currentImage.source === 'http://www.musee-orsay.fr') {
-      linkText = 'Musée d\'Orsay in Paris, France';
-    } else if (currentImage.source === 'https://www.pop.culture.gouv.fr/notice/museo/M5031') {
-      linkText = 'Musée du Louvre in Paris, France';
-    } else if (currentImage.source === 'https://www.pop.culture.gouv.fr') {
-      linkText = 'Ministère de la Culture in France';
-    } else if (currentImage.source === 'https://www.moma.org') {
       linkText = 'The Museum of Modern Art in New York, United States';
     } else if (currentImage.source === 'http://www.the-athenaeum.org') {
       linkText = "The Athenaeum";
