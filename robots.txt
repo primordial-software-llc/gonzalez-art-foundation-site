@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gonzalezartfoundation.org/sitemap.xml 

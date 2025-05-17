@@ -17,6 +17,66 @@ export default class Gallery {
         return true;
     }
 
+    addStructuredData(artwork) {
+        const jsonLd = {
+            "@context": "https://schema.org",
+            "@type": "VisualArtwork",
+            "name": artwork.name || "Untitled Artwork",
+            "artist": {
+                "@type": "Person",
+                "name": artwork.originalArtist || "Unknown Artist"
+            },
+            "dateCreated": artwork.date || "",
+            "image": `${Api.getImageBase()}${artwork.s3Path}`
+        };
+        
+        $('head').append(`<script id="artwork-structured-data" type="application/ld+json">${JSON.stringify(jsonLd)}</script>`);
+    }
+
+    updateMetaTags(artwork) {
+        // Update page title
+        const title = artwork.name 
+            ? `${artwork.name}${artwork.date ? ` (${artwork.date})` : ''} - Gonzalez Art Foundation`
+            : 'Gonzalez Art Foundation - Digital Art Gallery';
+        document.title = title;
+        
+        // Update meta tags
+        $('#meta-title').attr('content', title);
+        
+        const description = artwork.originalArtist
+            ? `${artwork.name || 'Artwork'}${artwork.date ? ` (${artwork.date})` : ''} by ${artwork.originalArtist} - Gonzalez Art Foundation`
+            : `View fine art from the Gonzalez Art Foundation digital collection`;
+        $('#meta-description').attr('content', description);
+        $('#meta-og-description').attr('content', description);
+        
+        // Set artwork-specific meta tags
+        if (artwork.originalArtist) $('#meta-art-artist').attr('content', artwork.originalArtist);
+        if (artwork.date) $('#meta-art-date').attr('content', artwork.date);
+        if (artwork.source) $('#meta-art-source').attr('content', artwork.source);
+        
+        // Set keywords based on available data
+        let keywords = ['art', 'fine art', 'digital gallery', 'Gonzalez Art Foundation'];
+        if (artwork.originalArtist) keywords.unshift(artwork.originalArtist);
+        if (artwork.name) keywords.unshift(artwork.name);
+        $('#meta-keywords').attr('content', keywords.join(', '));
+        
+        // Set og:image and og:url
+        if (artwork.s3Path) {
+            $('#meta-og-image').attr('content', `${Api.getImageBase()}${artwork.s3Path}`);
+        }
+        
+        const source = Url.getUrlParameter('source');
+        const pageId = Url.getUrlParameter('pageId');
+        if (source && pageId) {
+            const currentUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?source=${encodeURIComponent(source)}&pageId=${encodeURIComponent(pageId)}`;
+            $('#meta-og-url').attr('content', currentUrl);
+            $('#canonical-link').attr('href', currentUrl);
+        }
+        
+        // Add structured data for search engines
+        this.addStructuredData(artwork);
+    }
+
     showCurrentImage() {
         let jsonSearchResult = JSON.parse(localStorage.getItem('slideshowData'));
         let slideshowIndex = parseInt(localStorage.getItem("slideshowIndex"));
@@ -162,6 +222,7 @@ export default class Gallery {
                     .then((json) => {
                         if (self.assertSuccess(response, json)) {
                             self.showImage(json);
+                            self.updateMetaTags(json);
                         }
                     })
                     .catch(function (error) {
