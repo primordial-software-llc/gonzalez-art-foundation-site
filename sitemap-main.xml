@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://gonzalezartfoundation.org/</loc>
+    <loc>https://www.gonzalez-art-foundation.org/</loc>
     <lastmod>2023-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://gonzalezartfoundation.org/gallery.html</loc>
+    <loc>https://www.gonzalez-art-foundation.org/gallery.html</loc>
     <lastmod>2023-12-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gonzalezartfoundation.org/artists.html</loc>
+    <loc>https://www.gonzalez-art-foundation.org/artists.html</loc>
     <lastmod>2023-12-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://gonzalezartfoundation.org/about.html</loc>
+    <loc>https://www.gonzalez-art-foundation.org/about.html</loc>
     <lastmod>2023-12-31</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
