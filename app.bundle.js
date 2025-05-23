@@ -14924,6 +14924,21 @@ class HomePage {
             <option value="https://www.rijksmuseum.nl">Rijksmuseum in Amsterdam, Netherlands</option>`;
   }
 
+  setCanonicalUrl(url) {
+    // Remove existing canonical link if it exists
+    const existingCanonical = document.querySelector('link[rel="canonical"]');
+
+    if (existingCanonical) {
+      existingCanonical.remove();
+    } // Create and add new canonical link
+
+
+    const canonicalLink = document.createElement('link');
+    canonicalLink.rel = 'canonical';
+    canonicalLink.href = url;
+    document.head.appendChild(canonicalLink);
+  }
+
   init() {
     const self = this;
     const defaultSearchText = 'Sir Lawrence Alma-Tadema';
@@ -14953,6 +14968,11 @@ class HomePage {
 
     if (onLoadSearchText) {
       const artistExactMatch = _url.default.getUrlParameter('artistExactMatch') === 'true';
+
+      if (artistExactMatch) {
+        self.setCanonicalUrl(window.location.href);
+      }
+
       this.runSearch(artistExactMatch);
     }
 
