@@ -14971,6 +14971,7 @@ class HomePage {
 
       if (artistExactMatch) {
         self.setCanonicalUrl(window.location.href);
+        $('.featured-artist-container').hide();
       }
 
       this.runSearch(artistExactMatch);

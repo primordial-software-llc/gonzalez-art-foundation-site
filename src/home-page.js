@@ -167,6 +167,7 @@ export default class HomePage {
             const artistExactMatch = Url.getUrlParameter('artistExactMatch') === 'true';
             if (artistExactMatch) {
                 self.setCanonicalUrl(window.location.href);
+                $('.featured-artist-container').hide();
             }
             this.runSearch(artistExactMatch);
         }
