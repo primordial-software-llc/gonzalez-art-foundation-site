@@ -23,20 +23,19 @@ export default class Artists {
 
     init() {
         let self = this;
-        fetch(
-            `${ApiBase}unauthenticated/cache-everything/artist`,
-            { mode: 'cors' }).then(function (response) {
-            response
-                .json()
-                .then((json) => {
-                    if (self.assertSuccess(response, json)) {
-                        self.loadArtists(json);
-                    }
-                })
-                .catch(function (error) {
-                    console.log('Failed to get data:');
-                    console.log(error);
-                });
-        });
+        fetch('/static-data/artists.json')
+            .then(function (response) {
+                response
+                    .json()
+                    .then((json) => {
+                        if (self.assertSuccess(response, json)) {
+                            self.loadArtists(json);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log('Failed to get data:');
+                        console.log(error);
+                    });
+            });
     }
 }
