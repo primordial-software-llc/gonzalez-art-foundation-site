@@ -8,11 +8,94 @@
     <link rel="stylesheet" type="text/css" href="content/site.css">
     <script src="src/jquery-3.5.1.min.js"></script>
     <script src="app.bundle.js"></script>
+    <style>
+    .artist-filters {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    .artist-filters .btn-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .artist-filters .btn-group > div {
+        display: flex;
+        flex-direction: row;
+        gap: 0.25rem;
+    }
+    .artist-filters .btn {
+        min-width: 2.2rem;
+        padding: 0.5rem 0.9rem;
+        font-weight: 500;
+        border-radius: 0.25rem;
+        border: 1px solid #1976d2;
+        color: #1976d2;
+        background: #fff;
+        transition: background 0.2s, color 0.2s;
+        margin-bottom: 0.2rem;
+    }
+    .artist-filters .btn.active,
+    .artist-filters .btn[aria-current="page"] {
+        background: #1976d2;
+        color: #fff;
+        font-weight: bold;
+        pointer-events: none;
+    }
+    .artist-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .artist-list li {
+        padding: 0.6rem 0.5rem;
+        border-bottom: 1px solid #eee;
+        font-size: 1.08rem;
+    }
+    .artist-list li:last-child {
+        border-bottom: none;
+    }
+    .artist-list a {
+        text-decoration: none;
+        color: #1976d2;
+        font-weight: 500;
+    }
+    .artist-list a:hover {
+        text-decoration: underline;
+    }
+    .artist-search-bar {
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    #artist-search-input {
+        max-width: 350px;
+        display: inline-block;
+        font-size: 1.1rem;
+        padding: 0.5rem 0.8rem;
+        border-radius: 0.25rem;
+        border: 1px solid #1976d2;
+    }
+    .artist-filters.subdued {
+        opacity: 0.5;
+        pointer-events: auto;
+        transition: opacity 0.2s;
+    }
+    </style>
 </head>
 <body>
     <div id="main-nav" class="navbar navbar-inverse navbar-fixed-top"></div>
     <div class="container body-content">
         <h1>Artists</h1>
+        <div class="artist-search-bar" style="text-align:center; margin-bottom:1rem;">
+            <input type="text" id="artist-search-input" class="form-control" style="max-width:350px; display:inline-block;" placeholder="Search artists by name..." autocomplete="off">
+        </div>
+        <div class="artist-filters">
+            <div class="btn-group" role="group" aria-label="Artist filters">
+                <!-- A-Z buttons will be added here dynamically -->
+            </div>
+        </div>
         <div class="artists-container">
             <p>Loading...</p>
             <div class="progress">
