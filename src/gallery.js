@@ -1,4 +1,7 @@
-﻿import Api from "./api";
+﻿import $ from 'jquery';
+window.$ = $;
+window.jQuery = $;
+import Api from "./api";
 import Url from './url';
 import moment from 'moment';
 export default class Gallery {

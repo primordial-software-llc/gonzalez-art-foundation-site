@@ -1,4 +1,7 @@
-﻿import Api from './api';
+﻿import $ from 'jquery';
+window.$ = $;
+window.jQuery = $;
+import Api from './api';
 import Url from './url';
 
 export default class HomePage {

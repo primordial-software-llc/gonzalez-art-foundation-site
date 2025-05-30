@@ -1,3 +1,7 @@
+import $ from 'jquery';
+window.$ = $;
+window.jQuery = $;
+
 const ApiBase = 'https://api.gonzalez-art-foundation.org/';
 export default class Artists {
 
