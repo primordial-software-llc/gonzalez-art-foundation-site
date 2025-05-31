@@ -16987,7 +16987,6 @@ class Gallery {
 
     if (currentImage.source === 'http://images.nga.gov') {
       linkText = 'National Gallery of Art, Washington DC';
-      linkText = 'The Museum of Modern Art in New York, United States';
     } else if (currentImage.source === 'http://www.the-athenaeum.org') {
       linkText = "The Athenaeum";
       link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + currentImage.pageId;
