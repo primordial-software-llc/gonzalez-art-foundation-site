@@ -10,9 +10,13 @@ export default class HomePage {
         this.results = [];
         this.slideIndex = 0;
         this.slideShowData = [];
+        this.autoplayTimer = null;
+        this.hasMovedMouse = false;
     }
 
     showSlides(n) {
+        if (this.slideShowData.length === 0) return;
+        
         if (n >= this.slideShowData.length) {
             this.slideIndex = 0
         } else if (n < 0) {
@@ -20,6 +24,7 @@ export default class HomePage {
         } else {
             this.slideIndex = n;
         }
+        
         let item = this.slideShowData[this.slideIndex];
         let workName = '';
         if (item.name) {
@@ -31,33 +36,77 @@ export default class HomePage {
         if (item.originalArtist) {
             workName += `by ${item.originalArtist || ''}`;
         }
-        $('.slideshow-slide > img').attr('alt', workName);
-        $('.slideshow-slide > img').prop('src', `${Api.getImageBase()}${item.s3Path}`);
-        $('.slideshow-numbertext').text(`${this.slideIndex + 1} / ${this.slideShowData.length}`);
+        
+        // Update the main slideshow image
+        $('#featured-slideshow-image').attr('alt', workName);
+        $('#featured-slideshow-image').prop('src', `${Api.getImageBase()}${item.s3Path}`);
+        
+        // Update counter with clean format like gallery
+        $('#featured-slideshow-counter').text(`${this.slideIndex + 1} / ${this.slideShowData.length}`);
 
+        // Update slider position
+        if (this.slideShowData.length > 1) {
+            const sliderValue = (this.slideIndex / (this.slideShowData.length - 1)) * 100;
+            $('#featured-slideshow-slider').val(sliderValue);
+        }
+
+        // Update caption info
         let link = (item.sourceLink || '').replace('http://', 'https://');
         let linkText;
         if (item.source === 'http://images.nga.gov') {
             linkText = 'National Gallery of Art, Washington DC';
-        } else if (item.source === 'http://www.musee-orsay.fr') {
-            linkText = 'Musée d\'Orsay in Paris, France';
-        } else if (item.source === 'https://www.pop.culture.gouv.fr/notice/museo/M5031') {
-            linkText = 'Musée du Louvre in Paris, France';
-        } else if (item.source === 'https://www.pop.culture.gouv.fr') {
-            linkText = 'Ministère de la Culture in France'
-        } else if (item.source === 'https://www.moma.org') {
-            linkText = 'The Museum of Modern Art in New York, United States';
         } else if (item.source === 'http://www.the-athenaeum.org') {
             linkText = "The Athenaeum";
             link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + item.pageId;
         } else if (item.source === 'https://www.rijksmuseum.nl') {
             linkText = 'Rijksmuseum in Amsterdam, Netherlands';
         }
-        $('#slideshow-image-link').text(workName);
-        $('#slideshow-image-link').attr('href', `/gallery.html?source=${encodeURIComponent(item.source)}&pageId=${encodeURIComponent(item.pageId)}`);
+        
+        $('#featured-slideshow-title').text(workName);
+        $('#featured-slideshow-source').text(linkText);
+        $('#featured-slideshow-view').attr('href', `/gallery.html?source=${encodeURIComponent(item.source)}&pageId=${encodeURIComponent(item.pageId)}`);
+    }
 
-        $('#slideshow-image-source-link').text(linkText);
-        $('#slideshow-image-source-link').attr('href', link);
+    nextSlide() {
+        this.showSlides(this.slideIndex + 1);
+    }
+
+    prevSlide() {
+        this.showSlides(this.slideIndex - 1);
+    }
+
+    startAutoplay() {
+        this.stopAutoplay();
+        this.autoplayTimer = setInterval(() => {
+            this.nextSlide();
+        }, 6000); // 6 second intervals like gallery
+        $('#featured-slideshow-pause').show();
+        $('#featured-slideshow-play').hide();
+    }
+
+    stopAutoplay() {
+        if (this.autoplayTimer) {
+            clearInterval(this.autoplayTimer);
+            this.autoplayTimer = null;
+        }
+        $('#featured-slideshow-pause').hide();
+        $('#featured-slideshow-play').show();
+    }
+
+    showControls() {
+        this.hasMovedMouse = true;
+        $('.featured-slideshow-controls').fadeIn();
+    }
+
+    hideControls() {
+        $('.featured-slideshow-controls').fadeOut();
+    }
+
+    tryHideControls() {
+        if (!this.hasMovedMouse) {
+            this.hideControls();
+        }
+        this.hasMovedMouse = false;
     }
 
     loadSearchResults(jsonSearchResult) {
@@ -137,6 +186,65 @@ export default class HomePage {
         $('.search-text-input-group').show();
         $('#search-text').val(searchText);
 
+        // Slideshow controls
+        $('#featured-slideshow-prev').click((e) => {
+            e.preventDefault();
+            self.showSlides(self.slideIndex - 1);
+        });
+        
+        $('#featured-slideshow-next').click((e) => {
+            e.preventDefault();
+            self.showSlides(self.slideIndex + 1);
+        });
+        
+        $('#featured-slideshow-play').click((e) => {
+            e.preventDefault();
+            self.startAutoplay();
+        });
+        
+        $('#featured-slideshow-pause').click((e) => {
+            e.preventDefault();
+            self.stopAutoplay();
+        });
+
+        // ADD SLIDER FUNCTIONALITY HERE
+        $('#featured-slideshow-slider').on('input', function() {
+            const sliderValue = parseFloat($(this).val());
+            const imageIndex = Math.round((sliderValue / 100) * (self.slideShowData.length - 1));
+            self.showSlides(imageIndex);
+        });
+
+        // Mouse movement controls (like gallery)
+        $('.featured-slideshow-container').mousemove(() => {
+            self.showControls();
+        });
+
+        // Auto-hide controls every 15 seconds (like gallery)
+        setInterval(() => {
+            self.tryHideControls();
+        }, 15000);
+
+        // Load slideshow data
+        fetch('/static-data/slideshows/sir-lawrence-alma-tadema.json')
+            .then(function (response) {
+                response
+                    .json()
+                    .then((json) => {
+                        self.slideShowData = json;
+                        // Set slider max after data loads
+                        $('#featured-slideshow-slider').attr('max', 100);
+                        self.showSlides(0);
+                        // Start autoplay after a brief delay
+                        setTimeout(() => {
+                            self.startAutoplay();
+                        }, 2000);
+                    })
+                    .catch(function (error) {
+                        console.log('Failed to get slideshow data:');
+                        console.log(error);
+                    });
+            });
+
         $('#run-search').click(function () {
             self.runSearch(false);
         });
@@ -164,27 +272,6 @@ export default class HomePage {
             }
             this.runSearch(artistExactMatch);
         }
-        
-        $('.home .slideshow-button-container-prev').click(function () {
-            self.showSlides(self.slideIndex - 1);
-        });
-        $('.home .slideshow-button-container-next').click(function () {
-            self.showSlides(self.slideIndex + 1);
-        });
-
-        fetch('/static-data/slideshows/sir-lawrence-alma-tadema.json')
-            .then(function (response) {
-                response
-                    .json()
-                    .then((json) => {
-                        self.slideShowData = json;
-                        self.showSlides(0);
-                    })
-                    .catch(function (error) {
-                        console.log('Failed to get slideshow data:');
-                        console.log(error);
-                    });
-            });
     }
 
     async runSearch(artistExactMatch) {

@@ -10,85 +10,109 @@
     <script src="app.bundle.js"></script>
 </head>
 <body class="home">
-    <div id="main-nav" class="navbar navbar-inverse navbar-fixed-top"></div>
-    <div class="container body-content">
-        <div class="featured-artist-container">
-            <h1>Featured Artist</h1>
-            <p>
-                <strong>Sir Lawrence Alma-Tadema</strong> is a Dutch painter and draftsman known for his academic style works.
-                Sir Lawrence Alma-Tadema created many paintings featuring ancient Greek and Roman decadence.
-                <span class="view-more-works-by-featured-artist">View more works by Sir Lawrence Alma-Tadema.</span>
-            </p>
-            <div class="slideshow-container row">
-                <div class="col-1 slideshow-button-container-prev">
-                    <a class="slideshow-prev">&#10094;</a>
-                </div>
-                <div class="col-10">
-                    <div class="slideshow-slide" style="display: block">
-                        <img />
+    <nav id="main-nav" class="navbar navbar-expand-lg navbar-light"></nav>
+
+    <main class="main-content">
+        <div class="container body-content">
+            <div class="featured-artist-container">
+                <div class="featured-artist-header">
+                    <h2>Sir Lawrence Alma-Tadema</h2>
+                    <div class="featured-artist-intro">
+                        Dutch painter known for academic works featuring ancient Greek and Roman themes.
+                        <span class="view-more-works-by-featured-artist">View more works →</span>
                     </div>
                 </div>
-                <div class="col-1 slideshow-button-container-next">
-                    <a class="slideshow-next">&#10095;</a>
+                <!-- Updated slideshow with gallery-inspired design -->
+                <div class="featured-slideshow-container">
+                    <div class="featured-slideshow-image-container">
+                        <img id="featured-slideshow-image" />
+                    </div>
+                    
+                    <!-- Controls that fade in/out like gallery -->
+                    <div class="featured-slideshow-controls">
+                        <div class="featured-slideshow-info">
+                            <div id="featured-slideshow-title"></div>
+                            <div class="featured-slideshow-links">
+                                <a id="featured-slideshow-view" target="_blank">View in Gallery</a> - 
+                                <span id="featured-slideshow-source"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="featured-slideshow-player">
+                            <button id="featured-slideshow-prev" class="slideshow-control-btn">‹</button>
+                            <button id="featured-slideshow-pause" class="slideshow-control-btn">⏸</button>
+                            <button id="featured-slideshow-play" class="slideshow-control-btn" style="display: none;">▶</button>
+                            <span id="featured-slideshow-counter" class="slideshow-counter"></span>
+                            <button id="featured-slideshow-next" class="slideshow-control-btn">›</button>
+                        </div>
+                        
+                        <!-- Add the slider -->
+                        <div class="featured-slideshow-scrubber">
+                            <input type="range" id="featured-slideshow-slider" min="0" max="100" value="0" class="slideshow-slider">
+                        </div>
+                    </div>
                 </div>
-                <div class="slideshow-numbertext"></div>
-                <p id="caption" class="slideshow-caption">
-                    <a id="slideshow-image-link" target="_blank"></a> - <a id="slideshow-image-source-link" target="_blank"></a></p>
             </div>
+
+            <section class="search-section">
+                <h2 id="image-search">Explore Our Collection</h2>
+                <p>
+                    Discover over 300,000 works of fine art, fully indexed and freely accessible. 
+                </p>
+                <p>
+                    <strong>Pro tip:</strong> View your search results as a slideshow to create your own curated gallery experience. 
+                    For a truly immersive experience, try searching with no keywords to browse our entire collection—
+                    transforming any screen into an endless art gallery.
+                </p>
+                <div>
+                    <div class="input-form form-group row site-input-group">
+                        <label for="siteSelection" class="col-sm-2 col-form-label">Source:</label>
+                        <select id="siteSelection" class="form-control col-sm-10"></select>
+                    </div>
+                    <div class="input-form form-group row search-text-input-group">
+                        <label for="search-text" class="col-sm-2 col-form-label">Search:</label>
+                        <input id="search-text" type="text" value="" class="col-sm-10 form-control" placeholder="Artist name, artwork title, or keyword..."/>
+                    </div>
+                    <div class="input-form form-group row">
+                        <label for="max-results" class="col-sm-2 col-form-label">Results:</label>
+                        <input id="max-results" type="text" class="col-sm-10 form-control" value="100" />
+                    </div>
+                    <div class="input-form form-group row">
+                        <input id="run-search" type="button" value="Search Collection" class="btn btn-primary"/>
+                    </div>
+                    <div id="search-results">
+                        <div class="search-result-controls hide">
+                            <div class="search-results-summary">
+                                Showing <span class="current-matches"></span> of <span class="total-matches"></span> matching works of art
+                            </div>
+                            <div class="slideshow-start">
+                                <img alt="Start Slideshow" class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png" />
+                                <span class="slideshow-start-text">Start Slideshow</span>
+                            </div>
+                        </div>
+                        <div id="search-result-items"></div>
+                        <div class="search-result-controls hide">
+                            <div class="search-results-summary">
+                                Showing <span class="current-matches"></span> of <span class="total-matches"></span> matching works of art
+                            </div>
+                            <div class="slideshow-start">
+                                <img alt="Start Slideshow" class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png" />
+                                <span class="slideshow-start-text">Start Slideshow</span>
+                            </div>
+                            <input type="button" value="View More >" class="btn btn-primary view-more"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                <hr />
+                <p>Copyright 2017-2023 &copy | Gonzalez Art Foundation Inc.
+                <p>Icons by <a href="https://glyphicons.com/">Glyphicons</a> - <a href="images/Glyphicons/license.txt">License</a></p>
+            </footer>
         </div>
-        <h2 id="image-search">Image Search</h2>
-        <p>
-            The Gonzalez Art Foundation holds over 300,000 works of fine art indexed by name, date, artist without access restrictions.
-            Try the full text search below to explore the archive.
-            Search results can be opened in a slideshow to paginate the entire result set.
-            You can even browse the entire archive in a slideshow by searching on blank to turn any computer
-            into a beautiful nearly endless fine art gallery offering more works than any single museum has on public display at a time.
-        </p>
-        <div>
-            <div class="input-form form-group row site-input-group">
-                <label for="siteSelection" class="col-sm-2 col-form-label">Site:</label>
-                <select id="siteSelection" class="form-control col-sm-10"></select>
-            </div>
-            <div class="input-form form-group row search-text-input-group">
-                <label for="search-text" class="col-sm-2 col-form-label">Search Text:</label>
-                <input id="search-text" type="text" value="" class="col-sm-10 form-control"/>
-            </div>
-            <div class="input-form form-group row">
-                <label for="max-results" class="col-sm-2 col-form-label">Max Results:</label>
-                <input id="max-results" type="text" class="col-sm-10 form-control" value="100" />
-            </div>
-            <div class="input-form form-group row">
-                <input id="run-search" type="button" value="Search" class="btn btn-primary"/>
-            </div>
-            <div id="search-results">
-                <div class="search-result-controls hide">
-                    <div class="search-results-summary">
-                        Showing <span class="current-matches"></span> of <span class="total-matches"></span> matching works of art
-                    </div>
-                    <div class="slideshow-start">
-                        <img alt="Start Slideshow" class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png" />
-                        <span class="slideshow-start-text">Start Slideshow</span>
-                    </div>
-                </div>
-                <div id="search-result-items"></div>
-                <div class="search-result-controls hide">
-                    <div class="search-results-summary">
-                        Showing <span class="current-matches"></span> of <span class="total-matches"></span> matching works of art
-                    </div>
-                    <div class="slideshow-start">
-                        <img alt="Start Slideshow" class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png" />
-                        <span class="slideshow-start-text">Start Slideshow</span>
-                    </div>
-                    <input type="button" value="View More >" class="btn btn-primary view-more"/>
-                </div>
-            </div>
-        </div>
-        <hr />
-        <footer>
-            <p>Copyright 2017-2023 &copy | Gonzalez Art Foundation Inc.
-            <p>Icons by <a href="https://glyphicons.com/">Glyphicons</a> - <a href="images/Glyphicons/license.txt">License</a></p>
-        </footer>
-    </div>
+    </main>
+
     <div class="loader-container loader-group modal fade in hide" role="dialog" style="display: block; padding-right: 17px;">
         <div class="loader-dialog">
             <div class="loader loader-group hide"></div>

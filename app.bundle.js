@@ -17183,9 +17183,13 @@ class HomePage {
     this.results = [];
     this.slideIndex = 0;
     this.slideShowData = [];
+    this.autoplayTimer = null;
+    this.hasMovedMouse = false;
   }
 
   showSlides(n) {
+    if (this.slideShowData.length === 0) return;
+
     if (n >= this.slideShowData.length) {
       this.slideIndex = 0;
     } else if (n < 0) {
@@ -17207,24 +17211,25 @@ class HomePage {
 
     if (item.originalArtist) {
       workName += `by ${item.originalArtist || ''}`;
-    }
+    } // Update the main slideshow image
 
-    (0, _jquery.default)('.slideshow-slide > img').attr('alt', workName);
-    (0, _jquery.default)('.slideshow-slide > img').prop('src', `${_api.default.getImageBase()}${item.s3Path}`);
-    (0, _jquery.default)('.slideshow-numbertext').text(`${this.slideIndex + 1} / ${this.slideShowData.length}`);
+
+    (0, _jquery.default)('#featured-slideshow-image').attr('alt', workName);
+    (0, _jquery.default)('#featured-slideshow-image').prop('src', `${_api.default.getImageBase()}${item.s3Path}`); // Update counter with clean format like gallery
+
+    (0, _jquery.default)('#featured-slideshow-counter').text(`${this.slideIndex + 1} / ${this.slideShowData.length}`); // Update slider position
+
+    if (this.slideShowData.length > 1) {
+      const sliderValue = this.slideIndex / (this.slideShowData.length - 1) * 100;
+      (0, _jquery.default)('#featured-slideshow-slider').val(sliderValue);
+    } // Update caption info
+
+
     let link = (item.sourceLink || '').replace('http://', 'https://');
     let linkText;
 
     if (item.source === 'http://images.nga.gov') {
       linkText = 'National Gallery of Art, Washington DC';
-    } else if (item.source === 'http://www.musee-orsay.fr') {
-      linkText = 'Musée d\'Orsay in Paris, France';
-    } else if (item.source === 'https://www.pop.culture.gouv.fr/notice/museo/M5031') {
-      linkText = 'Musée du Louvre in Paris, France';
-    } else if (item.source === 'https://www.pop.culture.gouv.fr') {
-      linkText = 'Ministère de la Culture in France';
-    } else if (item.source === 'https://www.moma.org') {
-      linkText = 'The Museum of Modern Art in New York, United States';
     } else if (item.source === 'http://www.the-athenaeum.org') {
       linkText = "The Athenaeum";
       link = 'https://www.the-athenaeum.org/art/detail.php?ID=' + item.pageId;
@@ -17232,10 +17237,54 @@ class HomePage {
       linkText = 'Rijksmuseum in Amsterdam, Netherlands';
     }
 
-    (0, _jquery.default)('#slideshow-image-link').text(workName);
-    (0, _jquery.default)('#slideshow-image-link').attr('href', `/gallery.html?source=${encodeURIComponent(item.source)}&pageId=${encodeURIComponent(item.pageId)}`);
-    (0, _jquery.default)('#slideshow-image-source-link').text(linkText);
-    (0, _jquery.default)('#slideshow-image-source-link').attr('href', link);
+    (0, _jquery.default)('#featured-slideshow-title').text(workName);
+    (0, _jquery.default)('#featured-slideshow-source').text(linkText);
+    (0, _jquery.default)('#featured-slideshow-view').attr('href', `/gallery.html?source=${encodeURIComponent(item.source)}&pageId=${encodeURIComponent(item.pageId)}`);
+  }
+
+  nextSlide() {
+    this.showSlides(this.slideIndex + 1);
+  }
+
+  prevSlide() {
+    this.showSlides(this.slideIndex - 1);
+  }
+
+  startAutoplay() {
+    this.stopAutoplay();
+    this.autoplayTimer = setInterval(() => {
+      this.nextSlide();
+    }, 6000); // 6 second intervals like gallery
+
+    (0, _jquery.default)('#featured-slideshow-pause').show();
+    (0, _jquery.default)('#featured-slideshow-play').hide();
+  }
+
+  stopAutoplay() {
+    if (this.autoplayTimer) {
+      clearInterval(this.autoplayTimer);
+      this.autoplayTimer = null;
+    }
+
+    (0, _jquery.default)('#featured-slideshow-pause').hide();
+    (0, _jquery.default)('#featured-slideshow-play').show();
+  }
+
+  showControls() {
+    this.hasMovedMouse = true;
+    (0, _jquery.default)('.featured-slideshow-controls').fadeIn();
+  }
+
+  hideControls() {
+    (0, _jquery.default)('.featured-slideshow-controls').fadeOut();
+  }
+
+  tryHideControls() {
+    if (!this.hasMovedMouse) {
+      this.hideControls();
+    }
+
+    this.hasMovedMouse = false;
   }
 
   loadSearchResults(jsonSearchResult) {
@@ -17312,7 +17361,54 @@ class HomePage {
     (0, _jquery.default)('#siteSelection').append(self.getSiteOptions());
     (0, _jquery.default)('.last-id-input-group').hide();
     (0, _jquery.default)('.search-text-input-group').show();
-    (0, _jquery.default)('#search-text').val(searchText);
+    (0, _jquery.default)('#search-text').val(searchText); // Slideshow controls
+
+    (0, _jquery.default)('#featured-slideshow-prev').click(e => {
+      e.preventDefault();
+      self.showSlides(self.slideIndex - 1);
+    });
+    (0, _jquery.default)('#featured-slideshow-next').click(e => {
+      e.preventDefault();
+      self.showSlides(self.slideIndex + 1);
+    });
+    (0, _jquery.default)('#featured-slideshow-play').click(e => {
+      e.preventDefault();
+      self.startAutoplay();
+    });
+    (0, _jquery.default)('#featured-slideshow-pause').click(e => {
+      e.preventDefault();
+      self.stopAutoplay();
+    }); // ADD SLIDER FUNCTIONALITY HERE
+
+    (0, _jquery.default)('#featured-slideshow-slider').on('input', function () {
+      const sliderValue = parseFloat((0, _jquery.default)(this).val());
+      const imageIndex = Math.round(sliderValue / 100 * (self.slideShowData.length - 1));
+      self.showSlides(imageIndex);
+    }); // Mouse movement controls (like gallery)
+
+    (0, _jquery.default)('.featured-slideshow-container').mousemove(() => {
+      self.showControls();
+    }); // Auto-hide controls every 15 seconds (like gallery)
+
+    setInterval(() => {
+      self.tryHideControls();
+    }, 15000); // Load slideshow data
+
+    fetch('/static-data/slideshows/sir-lawrence-alma-tadema.json').then(function (response) {
+      response.json().then(json => {
+        self.slideShowData = json; // Set slider max after data loads
+
+        (0, _jquery.default)('#featured-slideshow-slider').attr('max', 100);
+        self.showSlides(0); // Start autoplay after a brief delay
+
+        setTimeout(() => {
+          self.startAutoplay();
+        }, 2000);
+      }).catch(function (error) {
+        console.log('Failed to get slideshow data:');
+        console.log(error);
+      });
+    });
     (0, _jquery.default)('#run-search').click(function () {
       self.runSearch(false);
     });
@@ -17338,22 +17434,6 @@ class HomePage {
 
       this.runSearch(artistExactMatch);
     }
-
-    (0, _jquery.default)('.home .slideshow-button-container-prev').click(function () {
-      self.showSlides(self.slideIndex - 1);
-    });
-    (0, _jquery.default)('.home .slideshow-button-container-next').click(function () {
-      self.showSlides(self.slideIndex + 1);
-    });
-    fetch('/static-data/slideshows/sir-lawrence-alma-tadema.json').then(function (response) {
-      response.json().then(json => {
-        self.slideShowData = json;
-        self.showSlides(0);
-      }).catch(function (error) {
-        console.log('Failed to get slideshow data:');
-        console.log(error);
-      });
-    });
   }
 
   async runSearch(artistExactMatch) {
@@ -17383,23 +17463,21 @@ exports.default = void 0;
 class Navigation {
   static getNavigation() {
     return `<div class="container">
-            <nav class="navbar navbar-light">
-                <a class="navbar-brand" href="index.html">Gonzalez Art Foundation</a>
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="gallery.html">Gallery</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="artists.html?letter=a">Artists</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
-                    </li>
-                </ul>
-            </nav>
+            <a class="navbar-brand" href="index.html">Gonzalez Art Foundation</a>
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="gallery.html">Gallery</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="artists.html?letter=a">Artists</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                </li>
+            </ul>
         </div>`;
   }
 

@@ -1,6 +1,253 @@
-﻿
+﻿/* Navigation styling - clean, modern approach */
 #main-nav {
-    margin-top: 20px;
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    position: relative;
+    z-index: 1000;
+    transition: box-shadow 0.3s ease;
+}
+
+#main-nav:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.navbar {
+    padding: 1.5rem 0;
+    min-height: auto;
+}
+
+.navbar-brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50 !important;
+    text-decoration: none;
+    margin-right: 2rem;
+    transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+    color: #1a252f !important;
+    text-decoration: none;
+}
+
+/* Navigation container layout */
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.navbar .nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
+}
+
+.navbar .nav-item {
+    margin: 0;
+}
+
+.nav {
+    margin-left: 0;
+}
+
+.nav-link {
+    color: #6c757d !important;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem !important;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #2c3e50 !important;
+    background-color: #f8f9fa;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.nav-link.active {
+    color: #fff !important;
+    background-color: #2c3e50;
+}
+
+/* Main content styling */
+.main-content {
+    margin-top: 0;
+}
+
+.body-content {
+    padding-top: 0;
+}
+
+/* Featured artist section improvements */
+.featured-artist-container {
+    padding: 2rem 0 0 0;
+    margin-bottom: 3rem;
+}
+
+.featured-artist-header {
+    margin: 0 auto 3rem auto;
+    text-align: center;
+    padding: 0 1rem;
+    max-width: 800px;
+}
+
+.featured-artist-header h2 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.featured-artist-intro {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.4;
+    margin-bottom: 0;
+}
+
+.view-more-works-by-featured-artist {
+    color: #007bff;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.view-more-works-by-featured-artist:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Search section improvements */
+.search-section {
+    padding: 2rem 0;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 3rem;
+    padding: 3rem 2rem;
+}
+
+.search-section h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+.search-section p {
+    color: #6c757d;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Form improvements */
+.input-form {
+    margin-bottom: 1.5rem;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    outline: none;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    border-radius: 8px;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+}
+
+/* Remove old navbar-inverse styles */
+.navbar-inverse {
+    background-color: transparent;
+    border: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem 0;
+    }
+    
+    .navbar .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.5rem;
+        margin-right: 0;
+    }
+    
+    .navbar .nav {
+        gap: 0.25rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .nav-link {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.9rem;
+    }
+    
+    .featured-artist-container {
+        padding: 3rem 0 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .featured-artist-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .search-section {
+        padding: 2rem 1rem;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-brand {
+        font-size: 1.3rem;
+    }
+    
+    .featured-artist-header h2 {
+        font-size: 1.4rem;
+    }
+    
+    .nav-link {
+        padding: 0.4rem 0.8rem !important;
+        font-size: 0.85rem;
+    }
 }
 
 body .form-control {
@@ -22,11 +269,6 @@ body .form-control {
 
 #login-form .form-control {
     width: 200px;
-}
-
-body > .navbar-inverse
-{
-    background-color: #EEE;
 }
 
 .input-form:not(:last-child)
@@ -144,11 +386,6 @@ a.nav-link:hover {
     width: 100%;
 }
 
-.view-more-works-by-featured-artist {
-    color: blue;
-    cursor: pointer;
-}
-
 .custom-blockquote {
     background-color: #E0E0E0;
     display: inline-block;
@@ -218,4 +455,170 @@ a.nav-link:hover {
     text-align: center;
     width: 100%;
     padding: 2px 16px;
+}
+
+/* Featured slideshow - clean light design, image-focused */
+.featured-slideshow-container {
+    position: relative;
+    margin: 20px auto;
+    max-width: 100%;
+}
+
+.featured-slideshow-image-container {
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    margin: 0 auto;
+}
+
+#featured-slideshow-image {
+    width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.featured-slideshow-controls {
+    color: #333;
+    text-align: center;
+}
+
+.featured-slideshow-info {
+    margin-bottom: 15px;
+}
+
+#featured-slideshow-title {
+    font-size: 1em;
+    font-weight: normal;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.featured-slideshow-links a {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.featured-slideshow-links a:hover {
+    text-decoration: underline;
+    color: #004499;
+}
+
+.featured-slideshow-player {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.slideshow-control-btn {
+    background: none;
+    border: none;
+    color: #666;
+    padding: 0;
+    cursor: pointer;
+    font-size: 32px;
+    transition: color 0.1s ease, background 0.1s ease;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: relative;
+}
+
+.slideshow-control-btn:active {
+    transform: scale(0.95);
+    background: rgba(0,0,0,0.1);
+}
+
+.slideshow-control-btn:focus {
+    outline: none;
+    background: rgba(0,0,0,0.1);
+}
+
+.slideshow-control-btn:focus:not(:focus-visible) {
+    background: none;
+}
+
+.slideshow-counter {
+    color: #666;
+    font-size: 16px;
+    min-width: 90px;
+    font-weight: 500;
+    padding: 0 15px;
+}
+
+/* Remove old slideshow styles */
+.home .slideshow-container,
+.home .slideshow-slide,
+.home .slideshow-prev,
+.home .slideshow-next,
+.home .slideshow-button-container-next,
+.home .slideshow-button-container-prev,
+.home .slideshow-numbertext,
+.home .slideshow-caption {
+    display: none;
+}
+
+.featured-slideshow-scrubber {
+    margin-top: 15px;
+    padding: 0 20px;
+}
+
+.slideshow-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #e0e0e0;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.slideshow-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #666;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.slideshow-slider::-webkit-slider-thumb:hover {
+    background: #333;
+}
+
+.slideshow-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #666;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s ease;
+}
+
+.slideshow-slider::-moz-range-thumb:hover {
+    background: #333;
+}
+
+.slideshow-slider::-moz-range-track {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #e0e0e0;
+    border: none;
 }
