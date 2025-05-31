@@ -12,6 +12,7 @@ export default class HomePage {
         this.slideShowData = [];
         this.autoplayTimer = null;
         this.hasMovedMouse = false;
+        this.hideControlsTimer = null;
     }
 
     showSlides(n) {
@@ -95,18 +96,69 @@ export default class HomePage {
 
     showControls() {
         this.hasMovedMouse = true;
-        $('.featured-slideshow-controls').fadeIn();
+        $('.featured-slideshow-controls').show(); // No fade
+        $('body').css('cursor', '');
+        this.hideOverlay(); // Remove overlay when showing controls
     }
 
     hideControls() {
-        $('.featured-slideshow-controls').fadeOut();
+        $('.featured-slideshow-controls').hide(); // No fade
+        $('body').css('cursor', 'none');
     }
 
     tryHideControls() {
         if (!this.hasMovedMouse) {
             this.hideControls();
+            // Create overlay fullscreen instead of browser fullscreen
+            this.showOverlay();
         }
         this.hasMovedMouse = false;
+    }
+
+    showOverlay() {
+        console.log('showOverlay() called - creating page overlay');
+        // Add overlay class to slideshow container
+        $('.featured-slideshow-container').addClass('overlay-mode');
+        // Hide everything else on the page
+        $('.main-content > .container > *:not(.featured-artist-container)').hide();
+        $('.featured-artist-header').hide();
+    }
+
+    hideOverlay() {
+        console.log('hideOverlay() called - removing page overlay');
+        // Remove overlay class
+        $('.featured-slideshow-container').removeClass('overlay-mode');
+        // Show everything else on the page
+        $('.main-content > .container > *:not(.featured-artist-container)').show();
+        $('.featured-artist-header').show();
+    }
+
+    /**
+     * Chrome requires full-screen mode to be user engaged.
+     */
+    showFullscreen() {
+        this.showOverlay();
+        let element = document.getElementsByTagName('html')[0];
+        if (element.webkitRequestFullScreen) {
+            element.webkitRequestFullScreen();
+        } else if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        } else {
+            console.log('No fullscreen API available');
+        }
+    }
+
+    isFullScreen() {
+        return !!(document.fullscreenElement || 
+                 document.webkitFullscreenElement || 
+                 document.mozFullScreenElement || 
+                 document.msFullscreenElement ||
+                 window.fullScreen ||
+                 (window.innerWidth === screen.width && window.innerHeight === screen.height));
     }
 
     loadSearchResults(jsonSearchResult) {
@@ -207,6 +259,23 @@ export default class HomePage {
             self.stopAutoplay();
         });
 
+        // Fullscreen button
+        $('#featured-slideshow-fullscreen').click((e) => {
+            e.preventDefault();
+            self.showFullscreen();
+            setTimeout(() => {
+                self.hideControls();
+                self.showOverlay();
+            }, 1000); // Requesting full screen likely requires user engagement and triggers the overlay breakout.
+        });
+
+        // Overlay button
+        $('#featured-slideshow-overlay').click((e) => {
+            e.preventDefault();
+            self.hideControls();
+            self.showOverlay();
+    });
+
         // ADD SLIDER FUNCTIONALITY HERE
         $('#featured-slideshow-slider').on('input', function() {
             const sliderValue = parseFloat($(this).val());
@@ -219,10 +288,23 @@ export default class HomePage {
             self.showControls();
         });
 
-        // Auto-hide controls every 15 seconds (like gallery)
+        // Document-level mouse and keyboard events (like gallery)
+        $(document).mousemove(() => {
+            if (!self.isFullScreen()) {
+                self.showControls();
+            }
+        });
+        
+        $(document).keypress(() => {
+            if (!self.isFullScreen()) {
+                self.showControls();
+            }
+        });
+
+        // Auto-hide controls every 60 seconds
         setInterval(() => {
             self.tryHideControls();
-        }, 15000);
+        }, 60000);
 
         // Load slideshow data
         fetch('/static-data/slideshows/sir-lawrence-alma-tadema.json')

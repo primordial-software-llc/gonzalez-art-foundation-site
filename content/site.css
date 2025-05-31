@@ -622,3 +622,85 @@ a.nav-link:hover {
     background: #e0e0e0;
     border: none;
 }
+
+/* Fullscreen styles for featured slideshow */
+.featured-slideshow-container.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: #000;
+    margin: 0;
+}
+
+.featured-slideshow-container.fullscreen .featured-slideshow-image-container {
+    height: 100vh;
+    background-color: #000;
+}
+
+.featured-slideshow-container.fullscreen .featured-slideshow-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+/* Overlay mode - like gallery page when controls are hidden */
+.featured-slideshow-container.overlay-mode {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: #EEE;
+    margin: 0;
+}
+
+.featured-slideshow-container.overlay-mode .featured-slideshow-image-container {
+    height: 100vh;
+    background-color: #EEE;
+}
+
+.featured-slideshow-container.overlay-mode .featured-slideshow-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+/* Hide cursor when controls are hidden */
+body.hide-cursor {
+    cursor: none !important;
+}
+
+body.hide-cursor * {
+    cursor: none !important;
+}
+
+/* Debug countdown timer */
+#debug-countdown {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 10000;
+    display: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
