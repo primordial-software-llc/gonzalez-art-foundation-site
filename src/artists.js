@@ -141,7 +141,7 @@ export default class Artists {
         } else {
             // Only filter when we have 3 or more characters
             for (let artist of artists) {
-                if (artist.originalArtist.toLowerCase().includes(query)) {
+                if (artist.artist.toLowerCase().includes(query)) {
                     artistList.append(`<li><a target="_blank" href='/index.html?search=${encodeURIComponent(artist.artist)}&artistExactMatch=true'>${artist.originalArtist} - ${artist.numberOfWorks} works of art</a></li>`);
                 }
             }
