@@ -87,9 +87,18 @@
                             <div class="search-results-summary">
                                 Showing <span class="current-matches"></span> of <span class="total-matches"></span> matching works of art
                             </div>
-                            <div class="slideshow-start">
-                                <img alt="Start Slideshow" class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png" />
-                                <span class="slideshow-start-text">Start Slideshow</span>
+                            <div class="search-actions">
+                                <div class="slideshow-start">
+                                    <img alt="Start Slideshow" class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png" />
+                                    <span class="slideshow-start-text">Start Slideshow</span>
+                                </div>
+                                <!-- Download functionality - Currently disabled
+                                     These buttons allow downloading search results as JSON files:
+                                     - download-results: Downloads currently loaded results
+                                     - download-all-results: Downloads all available results (loads everything via pagination)
+                                <button class="btn btn-secondary download-results" style="display: none;">Download Results</button>
+                                <button class="btn btn-info download-all-results" style="display: none;">Download All Available Results</button>
+                                -->
                             </div>
                         </div>
                         <div id="search-result-items"></div>
@@ -97,11 +106,20 @@
                             <div class="search-results-summary">
                                 Showing <span class="current-matches"></span> of <span class="total-matches"></span> matching works of art
                             </div>
-                            <div class="slideshow-start">
-                                <img alt="Start Slideshow" class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png" />
-                                <span class="slideshow-start-text">Start Slideshow</span>
+                            <div class="search-actions">
+                                <div class="slideshow-start">
+                                    <img alt="Start Slideshow" class="slideshow-start-image" src="/images/Glyphicons/glyphicons-9-film.png" />
+                                    <span class="slideshow-start-text">Start Slideshow</span>
+                                </div>
+                                <input type="button" value="View More >" class="btn btn-primary view-more"/>
+                                <!-- Download functionality - Currently disabled
+                                     These buttons allow downloading search results as JSON files:
+                                     - download-results: Downloads currently loaded results  
+                                     - download-all-results: Downloads all available results (loads everything via pagination)
+                                <button class="btn btn-secondary download-results" style="display: none;">Download Results</button>
+                                <button class="btn btn-info download-all-results" style="display: none;">Download All Available Results</button>
+                                -->
                             </div>
-                            <input type="button" value="View More >" class="btn btn-primary view-more"/>
                         </div>
                     </div>
                 </div>

@@ -17286,9 +17286,13 @@ class HomePage {
   }
 
   tryHideControls() {
-    if (!this.hasMovedMouse) {
-      this.hideControls(); // Create overlay fullscreen instead of browser fullscreen
+    // Don't auto-hide if artist exact match is true (slideshow is hidden)
+    const artistExactMatch = _url.default.getUrlParameter('artistExactMatch') === 'true'; // Don't auto-hide if the slideshow container is hidden
 
+    const slideshowHidden = (0, _jquery.default)('.featured-artist-container').is(':hidden');
+
+    if (!artistExactMatch && !slideshowHidden && !this.hasMovedMouse) {
+      this.hideControls();
       this.showOverlay();
     }
 
@@ -17296,19 +17300,13 @@ class HomePage {
   }
 
   showOverlay() {
-    console.log('showOverlay() called - creating page overlay'); // Add overlay class to slideshow container
-
-    (0, _jquery.default)('.featured-slideshow-container').addClass('overlay-mode'); // Hide everything else on the page
-
+    (0, _jquery.default)('.featured-slideshow-container').addClass('overlay-mode');
     (0, _jquery.default)('.main-content > .container > *:not(.featured-artist-container)').hide();
     (0, _jquery.default)('.featured-artist-header').hide();
   }
 
   hideOverlay() {
-    console.log('hideOverlay() called - removing page overlay'); // Remove overlay class
-
-    (0, _jquery.default)('.featured-slideshow-container').removeClass('overlay-mode'); // Show everything else on the page
-
+    (0, _jquery.default)('.featured-slideshow-container').removeClass('overlay-mode');
     (0, _jquery.default)('.main-content > .container > *:not(.featured-artist-container)').show();
     (0, _jquery.default)('.featured-artist-header').show();
   }
@@ -17376,7 +17374,96 @@ class HomePage {
       localStorage.setItem("slideshowData", JSON.stringify(jsonSearchResult));
       localStorage.setItem("slideshowIndex", 0);
       window.location = "/gallery.html";
-    });
+    }); // Update download button state
+
+    this.updateDownloadButton();
+  }
+
+  updateDownloadButton() {
+    if (this.results.length > 0) {
+      (0, _jquery.default)('.download-results').show();
+      (0, _jquery.default)('.download-results').text(`Download Results (${this.results.length} items)`);
+    } else {
+      (0, _jquery.default)('.download-results').hide();
+    }
+  }
+
+  downloadAllResults() {
+    if (this.results.length === 0) {
+      alert('No search results to download');
+      return;
+    } // Extract _source data from all results
+
+
+    const sourceData = this.results.map(item => item._source); // Create downloadable JSON
+
+    const dataStr = JSON.stringify(sourceData, null, 2);
+    const dataBlob = new Blob([dataStr], {
+      type: 'application/json'
+    }); // Create download link
+
+    const url = window.URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url; // Generate filename based on search text and timestamp
+
+    const searchText = (0, _jquery.default)('#search-text').val() || 'search';
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+    link.download = `${searchText.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_results_${timestamp}.json`; // Trigger download
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    console.log(`Downloaded ${this.results.length} search results`);
+  }
+
+  async downloadAllAvailableResults() {
+    if (this.results.length === 0) {
+      alert('No search results to download');
+      return;
+    } // Show loading state
+
+
+    const originalText = (0, _jquery.default)('.download-all-results').text();
+    (0, _jquery.default)('.download-all-results').text('Loading all results...');
+    (0, _jquery.default)('.download-all-results').prop('disabled', true);
+
+    try {
+      // Keep loading more results until we have them all
+      const totalMatches = parseInt((0, _jquery.default)('.total-matches').text());
+
+      while (this.results.length < totalMatches) {
+        let lastResult = this.results[this.results.length - 1];
+
+        let moreUrl = _api.default.getSearchUrl((0, _jquery.default)('#max-results').val(), (0, _jquery.default)('#search-text').val(), (0, _jquery.default)('#siteSelection').val(), JSON.stringify(lastResult.sort));
+
+        let moreJson = await _api.default.get(moreUrl);
+
+        if (moreJson.items.length === 0) {
+          break; // No more results
+        } // Add new results to our collection
+
+
+        for (let item of moreJson.items) {
+          this.results.push(item);
+        } // Update display
+
+
+        (0, _jquery.default)('.current-matches').text(this.results.length);
+        (0, _jquery.default)('.download-all-results').text(`Loading... (${this.results.length}/${totalMatches})`);
+      } // Now download all results
+
+
+      this.downloadAllResults();
+    } catch (error) {
+      console.error('Error loading all results:', error);
+      alert('Error loading all results. Please try again.');
+    } finally {
+      // Reset button state
+      (0, _jquery.default)('.download-all-results').text(originalText);
+      (0, _jquery.default)('.download-all-results').prop('disabled', false);
+      this.updateDownloadButton();
+    }
   }
 
   getSiteOptions() {
@@ -17416,10 +17503,14 @@ class HomePage {
 
     (0, _jquery.default)('#featured-slideshow-prev').click(e => {
       e.preventDefault();
+      self.stopAutoplay(); // Pause autoplay when user manually navigates
+
       self.showSlides(self.slideIndex - 1);
     });
     (0, _jquery.default)('#featured-slideshow-next').click(e => {
       e.preventDefault();
+      self.stopAutoplay(); // Pause autoplay when user manually navigates
+
       self.showSlides(self.slideIndex + 1);
     });
     (0, _jquery.default)('#featured-slideshow-play').click(e => {
@@ -17447,6 +17538,8 @@ class HomePage {
     }); // ADD SLIDER FUNCTIONALITY HERE
 
     (0, _jquery.default)('#featured-slideshow-slider').on('input', function () {
+      self.stopAutoplay(); // Pause autoplay when user manually uses slider
+
       const sliderValue = parseFloat((0, _jquery.default)(this).val());
       const imageIndex = Math.round(sliderValue / 100 * (self.slideShowData.length - 1));
       self.showSlides(imageIndex);
@@ -17468,24 +17561,54 @@ class HomePage {
     }); // Auto-hide controls every 60 seconds
 
     setInterval(() => {
+      console.log('tryHideControls');
       self.tryHideControls();
-    }, 60000); // Load slideshow data
+    }, 60000); // Load slideshow data only if slideshow will be visible
 
-    fetch('/static-data/slideshows/sir-lawrence-alma-tadema.json').then(function (response) {
-      response.json().then(json => {
-        self.slideShowData = json; // Set slider max after data loads
+    const artistExactMatch = _url.default.getUrlParameter('artistExactMatch') === 'true';
+    const currentSearchText = (0, _jquery.default)('#search-text').val().toLowerCase(); // Update featured artist header based on current search
 
-        (0, _jquery.default)('#featured-slideshow-slider').attr('max', 100);
-        self.showSlides(0); // Start autoplay after a brief delay
+    if (artistExactMatch) {
+      if (currentSearchText === 'jean-leon gerome' || currentSearchText === 'sir lawrence alma-tadema') {
+        self.updateFeaturedArtistHeader(currentSearchText);
+      }
+    } else {
+      // Default to Sir Lawrence Alma-Tadema for non-exact matches
+      self.updateFeaturedArtistHeader('sir lawrence alma-tadema');
+    } // Determine which slideshow to load based on search text
 
-        setTimeout(() => {
-          self.startAutoplay();
-        }, 2000);
-      }).catch(function (error) {
-        console.log('Failed to get slideshow data:');
-        console.log(error);
+
+    let slideshowFile = null;
+
+    if (!artistExactMatch) {
+      // Default slideshow when not an exact match
+      slideshowFile = '/static-data/slideshows/sir-lawrence-alma-tadema.json';
+    } else if (artistExactMatch && currentSearchText === 'jean-leon gerome') {
+      // Jean-Léon Gérôme slideshow for exact match
+      slideshowFile = '/static-data/slideshows/jean-leon-gerome.json';
+    } else if (artistExactMatch && currentSearchText === 'sir lawrence alma-tadema') {
+      // Sir Lawrence Alma-Tadema slideshow for exact match
+      slideshowFile = '/static-data/slideshows/sir-lawrence-alma-tadema.json';
+    }
+
+    if (slideshowFile) {
+      fetch(slideshowFile).then(function (response) {
+        response.json().then(json => {
+          self.slideShowData = json; // Set slider max after data loads
+
+          (0, _jquery.default)('#featured-slideshow-slider').attr('max', 100);
+          self.showSlides(0); // Start autoplay after a brief delay
+
+          setTimeout(() => {
+            self.startAutoplay();
+          }, 2000);
+        }).catch(function (error) {
+          console.log('Failed to get slideshow data:');
+          console.log(error);
+        });
       });
-    });
+    }
+
     (0, _jquery.default)('#run-search').click(function () {
       self.runSearch(false);
     });
@@ -17498,15 +17621,38 @@ class HomePage {
       self.loadSearchResults(moreJson);
     });
     (0, _jquery.default)('.view-more-works-by-featured-artist').click(function () {
-      window.location.href = `/index.html?search=${encodeURIComponent('sir lawrence alma-tadema')}&artistExactMatch=true`;
+      // Get the current featured artist name from the header
+      const currentArtistName = (0, _jquery.default)('.featured-artist-header h2').text().toLowerCase();
+      let searchParam = 'sir lawrence alma-tadema'; // default fallback
+
+      if (currentArtistName.includes('jean-léon gérôme')) {
+        searchParam = 'jean-leon gerome';
+      } else if (currentArtistName.includes('sir lawrence alma-tadema')) {
+        searchParam = 'sir lawrence alma-tadema';
+      }
+
+      window.location.href = `/index.html?search=${encodeURIComponent(searchParam)}&artistExactMatch=true`;
+    }); // Download buttons
+
+    (0, _jquery.default)('.download-results').click(function () {
+      self.downloadAllResults();
+    });
+    (0, _jquery.default)('.download-all-results').click(function () {
+      self.downloadAllAvailableResults();
     });
 
     if (onLoadSearchText) {
       const artistExactMatch = _url.default.getUrlParameter('artistExactMatch') === 'true';
 
       if (artistExactMatch) {
-        self.setCanonicalUrl(window.location.href);
-        (0, _jquery.default)('.featured-artist-container').hide();
+        self.setCanonicalUrl(window.location.href); // Only hide the slideshow for exact matches that aren't our target artists
+
+        const searchTextLower = onLoadSearchText.toLowerCase();
+        const isTargetArtist = searchTextLower === 'jean-leon gerome' || searchTextLower === 'sir lawrence alma-tadema';
+
+        if (!isTargetArtist) {
+          (0, _jquery.default)('.featured-artist-container').hide();
+        }
       }
 
       this.runSearch(artistExactMatch);
@@ -17516,6 +17662,8 @@ class HomePage {
   async runSearch(artistExactMatch) {
     (0, _jquery.default)('#search-result-items').empty();
     this.results = [];
+    this.updateDownloadButton(); // Hide download buttons when starting new search
+
     let self = this;
 
     let url = _api.default.getSearchUrl((0, _jquery.default)('#max-results').val(), (0, _jquery.default)('#search-text').val(), (0, _jquery.default)('#siteSelection').val(), JSON.stringify(self.searchAfter), artistExactMatch);
@@ -17523,6 +17671,26 @@ class HomePage {
     (0, _jquery.default)('.search-result-controls').show();
     let json = await _api.default.get(url);
     this.loadSearchResults(json);
+  }
+
+  updateFeaturedArtistHeader(artistName) {
+    const artistData = {
+      'sir lawrence alma-tadema': {
+        name: 'Sir Lawrence Alma-Tadema',
+        description: 'Dutch painter known for academic works featuring ancient Greek and Roman themes.'
+      },
+      'jean-leon gerome': {
+        name: 'Jean-Léon Gérôme',
+        description: 'French painter and sculptor known for his orientalist and historical academic works.'
+      }
+    };
+    const normalizedName = artistName.toLowerCase();
+    const artist = artistData[normalizedName];
+
+    if (artist) {
+      (0, _jquery.default)('.featured-artist-header h2').text(artist.name);
+      (0, _jquery.default)('.featured-artist-intro').html(`${artist.description} <span class="view-more-works-by-featured-artist">View more works →</span>`);
+    }
   }
 
 }

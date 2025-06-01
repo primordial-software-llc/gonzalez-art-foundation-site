@@ -96,7 +96,7 @@
 }
 
 .featured-artist-header {
-    margin: 0 auto 3rem auto;
+    margin: 0 auto 2rem auto;
     text-align: center;
     padding: 0 1rem;
     max-width: 800px;
@@ -487,13 +487,14 @@ a.nav-link:hover {
 }
 
 .featured-slideshow-info {
-    margin-bottom: 15px;
+    margin-bottom: .5rem;
 }
 
 #featured-slideshow-title {
     font-size: 1em;
     font-weight: normal;
-    margin-bottom: 5px;
+    margin-top: .5rem;
+    margin-bottom: .25rem;
     color: #666;
 }
 
@@ -703,4 +704,72 @@ body.hide-cursor * {
     z-index: 10000;
     display: none;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Search actions styling */
+.search-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.search-actions .slideshow-start {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.download-results,
+.download-all-results {
+    margin-left: auto;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #4e555b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(108,117,125,0.3);
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: white;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(23,162,184,0.3);
+}
+
+@media (max-width: 768px) {
+    .search-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    
+    .download-results,
+    .download-all-results {
+        margin-left: 0;
+    }
 }
